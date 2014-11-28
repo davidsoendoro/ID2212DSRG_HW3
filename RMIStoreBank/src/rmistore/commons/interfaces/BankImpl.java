@@ -14,10 +14,9 @@ import java.util.Map;
 import rmistore.commons.exceptions.Rejected;
 import rmistorebank.helper.RMIStoreBankHelper;
 
-
 @SuppressWarnings("serial")
 public class BankImpl extends UnicastRemoteObject implements Bank {
-    
+
     private PreparedStatement createAccountStatement;
     private PreparedStatement findAccountStatement;
     private PreparedStatement deleteAccountStatement;
@@ -49,7 +48,8 @@ public class BankImpl extends UnicastRemoteObject implements Bank {
         if (!exist) {
             Statement statement = connection.createStatement();
             statement.executeUpdate("CREATE TABLE " + RMIStoreBankHelper.TABLE_ACCOUNT_NAME
-                                            + " (name VARCHAR(32) PRIMARY KEY, balance FLOAT)");
+                    + " ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY"
+                    + "(START WITH 1, INCREMENT BY 1, name VARCHAR(128), balance FLOAT)");
         }
         return connection;
     }
@@ -60,12 +60,12 @@ public class BankImpl extends UnicastRemoteObject implements Bank {
             Class.forName("COM.cloudscape.core.RmiJdbcDriver");
             return DriverManager.getConnection(
                     "jdbc:cloudscape:rmi://localhost:1099/" + datasource
-                            + ";create=true;");
+                    + ";create=true;");
         } else if (dbms.equalsIgnoreCase("pointbase")) {
             Class.forName("com.pointbase.jdbc.jdbcUniversalDriver");
             return DriverManager.getConnection(
                     "jdbc:pointbase:server://localhost:9092/" + datasource
-                            + ",new", "PBPUBLIC", "PBPUBLIC");
+                    + ",new", "PBPUBLIC", "PBPUBLIC");
         } else if (dbms.equalsIgnoreCase("derby")) {
             Class.forName("org.apache.derby.jdbc.ClientXADataSource");
             return DriverManager.getConnection(
@@ -82,12 +82,12 @@ public class BankImpl extends UnicastRemoteObject implements Bank {
 
     private void prepareStatements(Connection connection) throws SQLException {
         createAccountStatement = connection.prepareStatement("INSERT INTO "
-                                                                     + RMIStoreBankHelper.TABLE_ACCOUNT_NAME + " (name, balance) VALUES (?, 0)");
+                + RMIStoreBankHelper.TABLE_ACCOUNT_NAME + " (name, balance) VALUES (?, 0)");
         findAccountStatement = connection.prepareStatement("SELECT * from "
-                                                                   + RMIStoreBankHelper.TABLE_ACCOUNT_NAME + " WHERE NAME = ?");
+                + RMIStoreBankHelper.TABLE_ACCOUNT_NAME + " WHERE NAME = ?");
         deleteAccountStatement = connection.prepareStatement("DELETE FROM "
-                                                                     + RMIStoreBankHelper.TABLE_ACCOUNT_NAME
-                                                                     + " WHERE name = ?");
+                + RMIStoreBankHelper.TABLE_ACCOUNT_NAME
+                + " WHERE name = ?");
     }
 
     @Override
@@ -97,12 +97,12 @@ public class BankImpl extends UnicastRemoteObject implements Bank {
 
     @Override
     public synchronized Account newAccount(String name) throws RemoteException,
-                                                               Rejected {
+            Rejected {
         AccountImpl account = (AccountImpl) accounts.get(name);
         if (account != null) {
             System.out.println("Account [" + name + "] exists!!!");
             throw new Rejected("Rejected: Bank:  Account for: "
-                                                + name + " already exists: " + account);
+                    + name + " already exists: " + account);
         }
         ResultSet result = null;
         try {
@@ -112,10 +112,10 @@ public class BankImpl extends UnicastRemoteObject implements Bank {
             if (result.next()) {
                 // account exists, instantiate, put in cache and throw exception.
                 account = new AccountImpl(name, result.getFloat("balance"),
-                                          getConnection());
+                        getConnection());
                 accounts.put(name, account);
                 throw new Rejected("Rejected: Account for: " + name
-                                                    + " already exists");
+                        + " already exists");
             }
             result.close();
 
@@ -126,7 +126,7 @@ public class BankImpl extends UnicastRemoteObject implements Bank {
                 account = new AccountImpl(name, getConnection());
                 accounts.put(name, account);
                 System.out.println("Bank: Account: " + account
-                                           + " has been created for " + name);
+                        + " has been created for " + name);
                 return account;
             } else {
                 throw new Rejected("Cannot create an account for " + name);
@@ -139,7 +139,7 @@ public class BankImpl extends UnicastRemoteObject implements Bank {
 
     @Override
     public synchronized Account getAccount(String name) throws RemoteException,
-                                                               Rejected {
+            Rejected {
         if (name == null) {
             return null;
         }
@@ -151,7 +151,7 @@ public class BankImpl extends UnicastRemoteObject implements Bank {
                 ResultSet result = findAccountStatement.executeQuery();
                 if (result.next()) {
                     acct = new AccountImpl(result.getString("name"),
-                                           result.getFloat("balance"), getConnection());
+                            result.getFloat("balance"), getConnection());
                     result.close();
                     accounts.put(name, acct);
                 } else {
@@ -178,7 +178,7 @@ public class BankImpl extends UnicastRemoteObject implements Bank {
             }
         } catch (SQLException e) {
             System.out.println("Unable to delete account for " + name + ": "
-                                       + e.getMessage());
+                    + e.getMessage());
             throw new Rejected("Unable to delete account..." + name + " " + e.getMessage());
         }
         System.out.println("Bank: Account for " + name + " has been deleted");
@@ -188,4 +188,6 @@ public class BankImpl extends UnicastRemoteObject implements Bank {
     private boolean hasAccount(String name) {
         return accounts.get(name) != null;
     }
+    
+    
 }

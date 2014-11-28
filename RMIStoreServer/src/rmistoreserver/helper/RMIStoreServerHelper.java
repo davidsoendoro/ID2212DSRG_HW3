@@ -31,6 +31,8 @@ public class RMIStoreServerHelper {
     public static final String RETRIEVE_CUSTOMER_PASS="SELECT pass FROM "+rmistoreserver.helper.RMIStoreServerHelper.TABLE_CUSTOMER+ " WHERE name = ?";
     public static final String GET_CUSTOMER_NAME="SELECT name FROM "+rmistoreserver.helper.RMIStoreServerHelper.TABLE_CUSTOMER+ " WHERE id = ?";
     public static final String GET_CUSTOMER_ACCOUNT_NUMBER="SELECT account_no FROM "+ rmistoreserver.helper.RMIStoreServerHelper.TABLE_CUSTOMER +" WHERE id = ?";
+    public static final String GET_CUSTOMER_ID="SELECT id FROM "+rmistoreserver.helper.RMIStoreServerHelper.TABLE_CUSTOMER+ " WHERE name = ?";
+
     
 
 
@@ -40,10 +42,15 @@ public class RMIStoreServerHelper {
             + "(START WITH 1, INCREMENT BY 1), name VARCHAR(128), "
             + "price FLOAT NOT NULL, quantity INTEGER, seller_id INTEGER NOT NULL FOREIGN KEY REFERENCES CUSTOMER(id))";
     public static final String INSERT_IN_ITEM_TABLE="INSERT INTO "+rmistoreserver.helper.RMIStoreServerHelper.TABLE_ITEM + " (name, price,quantity, seller_id) VALUES (?, ?, ?, ?)";
-    public static final String CHECKIF_ITEM_EXISTS=" SELECT QUANTITY FROM "+ rmistoreserver.helper.RMIStoreServerHelper.TABLE_ITEM+ " WHERE id = ?";
+    public static final String CHECK_ITEM=" SELECT * FROM "+ rmistoreserver.helper.RMIStoreServerHelper.TABLE_ITEM+ " WHERE id = ?";
     public static final String BUY_ITEM="UPDATE "+rmistoreserver.helper.RMIStoreServerHelper.TABLE_CUSTOMER+ "SET quantity = quantity-1 WHERE id = ? and quantity > 0";    
-    
-    //wish table
+    public static final String GET_USER_ITEMS="SELECT * FROM "+rmistoreserver.helper.RMIStoreServerHelper.TABLE_CUSTOMER+ " WHERE seller_id = ?";
+    public static final String GET_ALL_ITEMS="SELECT * FROM "+rmistoreserver.helper.RMIStoreServerHelper.TABLE_CUSTOMER;
+    public static final String GET_OTHER_ITEMS="SELECT * FROM "+rmistoreserver.helper.RMIStoreServerHelper.TABLE_CUSTOMER+ " WHERE seller_id != ?";
+
+
+
+//wish table
     public static final String CREATE_WISH_TABLE = "CREATE TABLE " + rmistoreserver.helper.RMIStoreServerHelper.TABLE_WISH
             + " (id INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY "
             + "(START WITH 1, INCREMENT BY 1), name VARCHAR(128), "

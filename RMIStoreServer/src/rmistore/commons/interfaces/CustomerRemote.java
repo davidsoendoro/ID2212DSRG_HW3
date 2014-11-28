@@ -13,10 +13,10 @@ import java.util.ArrayList;
  * @author davidsoendoro
  */
 public interface CustomerRemote extends Remote{
-    public void sellItem(String itemName, double price) throws rmistore.commons.exceptions.Rejected,RemoteException;
+    public void sellItem(String itemName, float price, int quantity) throws rmistore.commons.exceptions.Rejected,RemoteException;
     public void removeItem(int itemId) throws rmistore.commons.exceptions.Rejected,RemoteException;
     public void buyItem(int itemId)throws rmistore.commons.exceptions.Rejected,RemoteException;
-    public void wishItem(String name, double price)throws rmistore.commons.exceptions.Rejected,RemoteException;
+    public void wishItem(String name, float price)throws rmistore.commons.exceptions.Rejected,RemoteException;
     public ArrayList<Item> getUserItems()throws rmistore.commons.exceptions.Rejected,RemoteException;
     public ArrayList<Item> getOtherItems()throws rmistore.commons.exceptions.Rejected,RemoteException;
     public double checkBalance() throws RemoteException;

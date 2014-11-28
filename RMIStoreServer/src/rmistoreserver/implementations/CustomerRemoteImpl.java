@@ -10,7 +10,6 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import rmistore.commons.exceptions.Rejected;
 import rmistore.commons.interfaces.Item;
-import rmistoreserver.Wish;
 /**
  *
  * @author davidsoendoro
@@ -26,11 +25,11 @@ implements rmistore.commons.interfaces.CustomerRemote {
     }
 
     @Override
-    public synchronized void sellItem(String itemName, double price) throws Rejected,RemoteException{
-        int id=serverRemoteObj.getItemId();
-        Item item=new Item(id,this.myId,itemName,price);
+    public synchronized void sellItem(String itemName, float price, int quantity) throws Rejected,RemoteException{
+        //int id=serverRemoteObj.getItemId();
+        //Item item=new Item(id,this.myId,itemName,price);
         
-        if(this.serverRemoteObj.addItem(id, item)==false){
+        if(this.serverRemoteObj.addItem(itemName, price, quantity,myId)==false){
             throw new Rejected("Could not be added to sell list");
         }
         else
@@ -49,8 +48,8 @@ implements rmistore.commons.interfaces.CustomerRemote {
         } 
     }
     @Override
-    public synchronized void wishItem(String name, double price)throws Rejected,RemoteException {
-        this.serverRemoteObj.wishItemForCustomer(name, new Wish(myId,price));
+    public synchronized void wishItem(String name, float price)throws Rejected,RemoteException {
+        this.serverRemoteObj.wishItemForCustomer(name, myId,price);
     }
 
     @Override
