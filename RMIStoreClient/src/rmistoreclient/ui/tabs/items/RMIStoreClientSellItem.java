@@ -8,6 +8,7 @@ package rmistoreclient.ui.tabs.items;
 import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import rmistore.commons.exceptions.Rejected;
 import rmistore.commons.interfaces.Item;
 import rmistoreclient.helper.RMIStoreClientHelper;
 
@@ -68,7 +69,7 @@ public class RMIStoreClientSellItem extends javax.swing.JPanel {
     private void jButtonRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRemoveActionPerformed
         try {
             RMIStoreClientHelper.customerRemoteObj.removeItem(this.item.getItemId());
-        } catch (RemoteException ex) {
+        } catch (Rejected | RemoteException ex) {
             Logger.getLogger(RMIStoreClientSellItem.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButtonRemoveActionPerformed

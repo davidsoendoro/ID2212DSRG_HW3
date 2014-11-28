@@ -8,7 +8,6 @@ package rmistoreclient.implementations;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import javax.swing.JOptionPane;
-import rmistore.commons.interfaces.CustomerRemote;
 import rmistoreclient.helper.RMIStoreClientHelper;
 import rmistoreclient.interfaces.BalanceDisplayer;
 

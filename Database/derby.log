@@ -1,20 +1,7 @@
-Thu Nov 27 11:48:29 CET 2014 : Apache Derby Network Server - 10.10.2.0 - (1582446) started and ready to accept connections on port 1527
+Fri Nov 28 09:54:38 CET 2014 : Apache Derby Network Server - 10.10.2.0 - (1582446) started and ready to accept connections on port 1527
 ----------------------------------------------------------------
-Thu Nov 27 11:48:30 CET 2014:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.10.2.0 - (1582446): instance a816c00e-0149-f0dd-ce5d-ffff8ac858a1 
-on database directory /Users/davidsoendoro/ID2212DSRG_HW3/Database/rmistore with class loader sun.misc.Launcher$AppClassLoader@60f32dde 
-Loaded from file:/Applications/NetBeans/glassfish-4.1/javadb/lib/derby.jar
-java.vendor=Oracle Corporation
-java.runtime.version=1.7.0_67-b01
-user.dir=/Applications/NetBeans/glassfish-4.1/javadb
-os.name=Mac OS X
-os.arch=x86_64
-os.version=10.10
-derby.system.home=/Users/davidsoendoro/ID2212DSRG_HW3/Database
-Database Class Loader started - derby.database.classpath=''
-----------------------------------------------------------------
-Thu Nov 27 11:52:08 CET 2014:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.10.2.0 - (1582446): instance d89d8024-0149-f0dd-ce5d-ffff8ac858a1 
+Fri Nov 28 09:54:39 CET 2014:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.10.2.0 - (1582446): instance a816c00e-0149-f59b-f1f8-ffff8ac858a1 
 on database directory /Users/davidsoendoro/ID2212DSRG_HW3/Database/rmibank with class loader sun.misc.Launcher$AppClassLoader@60f32dde 
 Loaded from file:/Applications/NetBeans/glassfish-4.1/javadb/lib/derby.jar
 java.vendor=Oracle Corporation
@@ -25,22 +12,3 @@ os.arch=x86_64
 os.version=10.10
 derby.system.home=/Users/davidsoendoro/ID2212DSRG_HW3/Database
 Database Class Loader started - derby.database.classpath=''
-----------------------------------------------------------------
-Thu Nov 27 11:52:09 CET 2014:
-Shutting down instance d89d8024-0149-f0dd-ce5d-ffff8ac858a1 on database directory /Users/davidsoendoro/ID2212DSRG_HW3/Database/rmibank with class loader sun.misc.Launcher$AppClassLoader@60f32dde 
-Thu Nov 27 11:52:09 CET 2014 Thread[DRDAConnThread_4,5,main] (DATABASE = rmibank), (DRDAID = {3}), Database 'rmibank' shutdown.
-----------------------------------------------------------------
-Thu Nov 27 11:52:12 CET 2014:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.10.2.0 - (1582446): instance 89e800c0-0149-f0dd-ce5d-ffff8ac858a1 
-on database directory /Users/davidsoendoro/ID2212DSRG_HW3/Database/rmibank with class loader sun.misc.Launcher$AppClassLoader@60f32dde 
-Loaded from file:/Applications/NetBeans/glassfish-4.1/javadb/lib/derby.jar
-java.vendor=Oracle Corporation
-java.runtime.version=1.7.0_67-b01
-user.dir=/Applications/NetBeans/glassfish-4.1/javadb
-os.name=Mac OS X
-os.arch=x86_64
-os.version=10.10
-derby.system.home=/Users/davidsoendoro/ID2212DSRG_HW3/Database
-Database Class Loader started - derby.database.classpath=''
-----------------------------------------------------------------
-Thu Nov 27 12:13:03 CET 2014: Shutting down Derby engine

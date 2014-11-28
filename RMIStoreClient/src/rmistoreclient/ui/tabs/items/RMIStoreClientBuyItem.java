@@ -9,6 +9,7 @@ import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static javax.swing.JOptionPane.showMessageDialog;
+import rmistore.commons.exceptions.Rejected;
 import rmistore.commons.interfaces.Item;
 import rmistoreclient.helper.RMIStoreClientHelper;
 
@@ -79,7 +80,7 @@ public class RMIStoreClientBuyItem extends javax.swing.JPanel {
     private void jButtonBuyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuyActionPerformed
         try {
             RMIStoreClientHelper.customerRemoteObj.buyItem(this.item.getItemId());
-        } catch (RemoteException ex) {
+        } catch (Rejected | RemoteException ex) {
             Logger.getLogger(RMIStoreClientBuyItem.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButtonBuyActionPerformed
@@ -99,7 +100,7 @@ public class RMIStoreClientBuyItem extends javax.swing.JPanel {
             try {
                 RMIStoreClientHelper.customerRemoteObj.wishItem(this.item.getName(), 
                         Double.parseDouble(jTextFieldWishPrice.getText()));
-            } catch (RemoteException ex) {
+            } catch (Rejected | RemoteException ex) {
                 Logger.getLogger(RMIStoreClientBuyItem.class.getName()).log(Level.SEVERE, null, ex);
             }
         }

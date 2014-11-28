@@ -71,7 +71,7 @@ implements rmistore.commons.interfaces.CustomerRemote {
 
     @Override
     public void removeItem(int itemId) throws Rejected, RemoteException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.serverRemoteObj.removeItem(itemId);
     }
     
     @Override

@@ -6,8 +6,11 @@
 package rmistoreclient.ui.tabs;
 
 import java.rmi.RemoteException;
+import java.text.DecimalFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static javax.swing.JOptionPane.showMessageDialog;
+import rmistore.commons.exceptions.Rejected;
 import rmistoreclient.helper.RMIStoreClientHelper;
 import rmistoreclient.interfaces.BalanceDisplayer;
 import rmistoreclient.interfaces.Callback;
@@ -38,8 +41,33 @@ public class RMIStoreClientAccountPanel extends RMIStoreClientGenericTab impleme
 
         jLabelBalance = new javax.swing.JLabel();
         jLabelBalanceValue = new javax.swing.JLabel();
+        jTextFieldDeposit = new javax.swing.JTextField();
+        jSeparator1 = new javax.swing.JSeparator();
+        jLabelDeposit = new javax.swing.JLabel();
+        jLabelWithdraw = new javax.swing.JLabel();
+        jTextFieldWithdraw = new javax.swing.JTextField();
+        jButtonDeposit = new javax.swing.JButton();
+        jButtonWithdraw = new javax.swing.JButton();
 
         jLabelBalance.setText("Balance:");
+
+        jLabelDeposit.setText("Deposit");
+
+        jLabelWithdraw.setText("Withdraw");
+
+        jButtonDeposit.setText("Deposit");
+        jButtonDeposit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonDepositActionPerformed(evt);
+            }
+        });
+
+        jButtonWithdraw.setText("Withdraw");
+        jButtonWithdraw.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonWithdrawActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -47,10 +75,28 @@ public class RMIStoreClientAccountPanel extends RMIStoreClientGenericTab impleme
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabelBalance)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabelBalanceValue)
-                .addContainerGap(337, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jSeparator1)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabelBalance)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabelBalanceValue))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabelWithdraw, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jTextFieldWithdraw, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButtonWithdraw))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabelDeposit, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jTextFieldDeposit, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButtonDeposit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGap(0, 85, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -59,14 +105,91 @@ public class RMIStoreClientAccountPanel extends RMIStoreClientGenericTab impleme
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelBalance)
                     .addComponent(jLabelBalanceValue))
-                .addContainerGap(278, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextFieldDeposit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabelDeposit)
+                    .addComponent(jButtonDeposit))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextFieldWithdraw, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabelWithdraw)
+                    .addComponent(jButtonWithdraw))
+                .addContainerGap(190, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButtonDepositActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDepositActionPerformed
+        String alert = "";
+        double value = 0;
+        if(jTextFieldDeposit.getText().length() <= 0) {
+            alert += "Deposit value must not be empty!\n";
+        }
+        try {
+            value = Double.valueOf(jTextFieldDeposit.getText());
+            if(value <= 0) {
+                alert +="Put bigger value than 0!\n";
+            }
+        }
+        catch (NumberFormatException ex) {
+            alert += "Put correct number format in deposit!\n";
+        }
+        
+        if(alert.length() > 0) {
+            showMessageDialog(null, alert);  
+        }
+        else {
+            try {
+                RMIStoreClientHelper.accountObj.deposit((float) value);
+                jTextFieldDeposit.setText("");
+            } catch (Exception ex) {
+                showMessageDialog(RMIStoreClientHelper.currentFrame, ex.getMessage());
+            }
+        }
+    }//GEN-LAST:event_jButtonDepositActionPerformed
+
+    private void jButtonWithdrawActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonWithdrawActionPerformed
+        String alert = "";
+        double value = 0;
+        if(jTextFieldWithdraw.getText().length() <= 0) {
+            alert += "Withdraw value must not be empty!\n";
+        }
+        try {
+            value = Double.valueOf(jTextFieldWithdraw.getText());
+            if(value <= 0) {
+                alert +="Put bigger value than 0!\n";
+            }
+        }
+        catch (NumberFormatException ex) {
+            alert += "Put correct number format in withdraw!\n";
+        }
+        
+        if(alert.length() > 0) {
+            showMessageDialog(null, alert);  
+        }
+        else {
+            try {
+                RMIStoreClientHelper.accountObj.withdraw((float) value);
+                jTextFieldWithdraw.setText("");
+            } catch (Exception ex) {
+                showMessageDialog(RMIStoreClientHelper.currentFrame, ex.getMessage());
+            }
+        }
+    }//GEN-LAST:event_jButtonWithdrawActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButtonDeposit;
+    private javax.swing.JButton jButtonWithdraw;
     private javax.swing.JLabel jLabelBalance;
     private javax.swing.JLabel jLabelBalanceValue;
+    private javax.swing.JLabel jLabelDeposit;
+    private javax.swing.JLabel jLabelWithdraw;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JTextField jTextFieldDeposit;
+    private javax.swing.JTextField jTextFieldWithdraw;
     // End of variables declaration//GEN-END:variables
 
     @Override
@@ -77,6 +200,7 @@ public class RMIStoreClientAccountPanel extends RMIStoreClientGenericTab impleme
     public void refreshBalance() {
         try {
             RMIStoreClientHelper.customerRemoteObj.callback = this;
+            RMIStoreClientHelper.accountObj.callback = this;
             RMIStoreClientHelper.customerRemoteObj.checkBalance();
         } catch (RemoteException ex) {
             Logger.getLogger(RMIStoreClientAccountPanel.class.getName()).log(Level.SEVERE, null, ex);
@@ -86,7 +210,17 @@ public class RMIStoreClientAccountPanel extends RMIStoreClientGenericTab impleme
     @Override
     public void doCallback(Object arguments) {
         if(arguments != null && arguments.getClass() == Double.class) {
-            jLabelBalanceValue.setText(" $" + arguments);
+            DecimalFormat df = new DecimalFormat("#.00");
+            jLabelBalanceValue.setText(" $" + df.format(arguments));
+        }
+        else if(arguments != null && arguments.getClass() == String.class) {
+            String argumentsString = (String) arguments;
+            if(argumentsString.equals("deposit")) {
+                refreshBalance();
+            }
+            else if(argumentsString.equals("withdraw")) {
+                refreshBalance();
+            }
         }
     }
 }

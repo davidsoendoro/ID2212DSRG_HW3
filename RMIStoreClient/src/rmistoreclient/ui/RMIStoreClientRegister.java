@@ -5,17 +5,22 @@
  */
 package rmistoreclient.ui;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static javax.swing.JOptionPane.showMessageDialog;
+import rmistore.commons.exceptions.Rejected;
+import rmistore.commons.interfaces.Bank;
 import rmistore.commons.interfaces.ClientRemote;
 import rmistore.commons.interfaces.CustomerRemote;
 import rmistore.commons.interfaces.ServerRemote;
 import rmistoreclient.helper.RMIStoreClientHelper;
+import rmistoreclient.implementations.AccountThreadImpl;
 import rmistoreclient.implementations.ClientRemoteImpl;
 import rmistoreclient.implementations.CustomerRemoteThreadImpl;
 
@@ -91,6 +96,7 @@ public class RMIStoreClientRegister extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRegisterActionPerformed
+        jButtonRegister.setEnabled(false);
         new RequestThread(RMIStoreClientHelper.REGISTER_COMMAND).start();
     }//GEN-LAST:event_jButtonRegisterActionPerformed
 
@@ -161,6 +167,12 @@ public class RMIStoreClientRegister extends javax.swing.JFrame {
                         RMIStoreClientHelper.customerRemoteObj = 
                                 new CustomerRemoteThreadImpl(customerRemote);
                         
+                        // Connect to Bank
+                        Bank rmiBankObj = (Bank)Naming.lookup(
+                                RMIStoreClientHelper.RMIBankName);
+                        RMIStoreClientHelper.accountObj = new AccountThreadImpl(
+                                rmiBankObj.getAccount(jTextFieldUsername.getText()));
+                        
                         RMIStoreClientMain rmiStoreClientMain = new RMIStoreClientMain(
                             RMIStoreClientRegister.this, jTextFieldUsername.getText());
                         rmiStoreClientMain.setVisible(true);
@@ -168,11 +180,16 @@ public class RMIStoreClientRegister extends javax.swing.JFrame {
                         break;
                 }
             }
-            catch (RemoteException | NotBoundException | MalformedURLException ex) {
+            catch (RemoteException | NotBoundException | MalformedURLException | Rejected ex) {
                 showMessageDialog(null, ex.getMessage());
                 
                 Logger.getLogger(RMIStoreClientRegister.class.getName()).
                         log(Level.SEVERE, null, ex);
+            }
+            finally {
+                if(command != RMIStoreClientHelper.STARTRMI_COMMAND) {
+                    jButtonRegister.setEnabled(true);
+                }
             }
         }
         

@@ -1,5 +1,5 @@
 package rmistore.commons.exceptions;
-final public class Rejected extends java.rmi.RemoteException {
+final public class Rejected extends Exception {
   public Rejected() {
     super();
   }

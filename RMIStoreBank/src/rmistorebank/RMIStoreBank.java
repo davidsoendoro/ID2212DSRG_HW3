@@ -10,6 +10,7 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import rmistore.commons.interfaces.Bank;
@@ -33,9 +34,9 @@ public class RMIStoreBank extends Thread {
         }
 
         try {            
-            Bank rmiBankObj = new BankImpl(RMIStoreBankHelper.RMIBankName);
+            Bank rmiBankObj = new BankImpl(RMIStoreBankHelper.RMIDatasource, RMIStoreBankHelper.RMIDbms);
             Naming.rebind(RMIStoreBankHelper.RMIBankName, rmiBankObj);
-        } catch (RemoteException | MalformedURLException ex) {
+        } catch (RemoteException | MalformedURLException | ClassNotFoundException | SQLException ex) {
             Logger.getLogger(RMIStoreBank.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

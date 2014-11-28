@@ -162,6 +162,7 @@ public class RMIStoreClientMain extends javax.swing.JFrame {
     
     private void initTabs() {
         RMIStoreClientHelper.customerRemoteObj.setLoader(jProgressBar);
+        RMIStoreClientHelper.accountObj.setLoader(jProgressBar);
 
         // Init buy tab
         buyTab = new RMIStoreClientBuyPanel();

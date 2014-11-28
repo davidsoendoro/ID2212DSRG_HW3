@@ -139,7 +139,7 @@ public class RMIStoreClientSellPanel extends RMIStoreClientGenericTab implements
             try {
                 RMIStoreClientHelper.customerRemoteObj.sellItem(jTextFieldItemName.getText(),
                         Double.valueOf(jTextFieldItemPrice.getText()));
-            } catch (RemoteException ex) {
+            } catch (Exception ex) {
                 Logger.getLogger(RMIStoreClientSellPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
         }        
@@ -163,8 +163,7 @@ public class RMIStoreClientSellPanel extends RMIStoreClientGenericTab implements
         try {
             RMIStoreClientHelper.customerRemoteObj.callback = this;
             RMIStoreClientHelper.customerRemoteObj.getUserItems();          
-            System.out.println("Called");
-        } catch (RemoteException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(RMIStoreClientSellPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -172,7 +171,6 @@ public class RMIStoreClientSellPanel extends RMIStoreClientGenericTab implements
     @Override
     public synchronized void doCallback(Object arguments) {
         if(arguments != null && arguments.getClass() == ArrayList.class) {
-            System.out.println("Listed");
             ArrayList<Item> items = (ArrayList<Item>) arguments;
             
             jPanelItems.removeAll();
@@ -186,7 +184,9 @@ public class RMIStoreClientSellPanel extends RMIStoreClientGenericTab implements
         else if(arguments != null && arguments.getClass() == String.class) {
             String argumentsString = (String) arguments;
             if(argumentsString.equals("sellItem")) {
-                System.out.println("Calling");
+                refreshItemList();
+            }
+            else if(argumentsString.equals("removeItem")) {
                 refreshItemList();
             }
         }
