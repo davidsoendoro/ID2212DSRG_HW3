@@ -10,8 +10,53 @@ package rmistoreserver.helper;
  * @author davidsoendoro
  */
 public class RMIStoreServerHelper {
-    
+
     public static final String RMIStoreName = "//localhost:1100/RMIStore";
     public static final String RMIBankName = "//localhost:1101/RMIStoreBank";
+    public static final String RMIStoreDatasource = "rmistore";
+    public static final String RMIStoreDbms = "derby";
+
+    public static final String TABLE_CUSTOMER = "CUSTOMER";
+    public static final String TABLE_ITEM = "ITEM";
+    public static final String TABLE_WISH = "WISH";
+    public static final String TABLE_TRANSACTION = "TRANSACTION";
+    
+    //Customer table
+    public static final String CREATE_CUSTOMER_TABLE = "CREATE TABLE " + rmistoreserver.helper.RMIStoreServerHelper.TABLE_CUSTOMER
+            + " (id INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY "
+            + "(START WITH 1, INCREMENT BY 1), name VARCHAR(128),pass VARCHAR(64) "
+            + "account_number INTEGER NOT NULL)";
+    public static final String INSERT_IN_CUSTOMER_TABLE="INSERT INTO "+rmistoreserver.helper.RMIStoreServerHelper.TABLE_CUSTOMER + " (name, pass, account_number) VALUES (?, ?,?)";
+    public static final String CHECKIF_NAME_EXISTS_IN_CUSTOMER_TABLE="SELECT * from "+ rmistoreserver.helper.RMIStoreServerHelper.TABLE_CUSTOMER+ " WHERE name = ?";
+    public static final String RETRIEVE_CUSTOMER_PASS="SELECT pass FROM "+rmistoreserver.helper.RMIStoreServerHelper.TABLE_CUSTOMER+ " WHERE name = ?";
+    public static final String GET_CUSTOMER_NAME="SELECT name FROM "+rmistoreserver.helper.RMIStoreServerHelper.TABLE_CUSTOMER+ " WHERE id = ?";
+    public static final String GET_CUSTOMER_ACCOUNT_NUMBER="SELECT account_no FROM "+ rmistoreserver.helper.RMIStoreServerHelper.TABLE_CUSTOMER +" WHERE id = ?";
+    
+
+
+    //item table
+    public static final String CREATE_ITEM_TABLE = "CREATE TABLE " + rmistoreserver.helper.RMIStoreServerHelper.TABLE_ITEM
+            + " (id INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY "
+            + "(START WITH 1, INCREMENT BY 1), name VARCHAR(128), "
+            + "price FLOAT NOT NULL, quantity INTEGER, seller_id INTEGER NOT NULL FOREIGN KEY REFERENCES CUSTOMER(id))";
+    public static final String INSERT_IN_ITEM_TABLE="INSERT INTO "+rmistoreserver.helper.RMIStoreServerHelper.TABLE_ITEM + " (name, price,quantity, seller_id) VALUES (?, ?, ?, ?)";
+    public static final String CHECKIF_ITEM_EXISTS=" SELECT QUANTITY FROM "+ rmistoreserver.helper.RMIStoreServerHelper.TABLE_ITEM+ " WHERE id = ?";
+    public static final String BUY_ITEM="UPDATE "+rmistoreserver.helper.RMIStoreServerHelper.TABLE_CUSTOMER+ "SET quantity = quantity-1 WHERE id = ? and quantity > 0";    
+    
+    //wish table
+    public static final String CREATE_WISH_TABLE = "CREATE TABLE " + rmistoreserver.helper.RMIStoreServerHelper.TABLE_WISH
+            + " (id INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY "
+            + "(START WITH 1, INCREMENT BY 1), name VARCHAR(128), "
+            + "price FLOAT NOT NULL, wisher_id INTEGER NOT NULL FOREIGN KEY REFERENCES CUSTOMER(id))";
+    public static final String INSERT_IN_WISH_TABLE="INSERT INTO "+rmistoreserver.helper.RMIStoreServerHelper.TABLE_WISH + " (name, price,wisher_id) VALUES (?, ?, ?)";
+    public static final String RETRIEVE_WISH="SELECT * FROM "+rmistoreserver.helper.RMIStoreServerHelper.TABLE_WISH + "WHERE name = ?";
+    
+    
+    //transaction table
+    public static final String CREATE_TRANSACTION_TABLE = "CREATE TABLE " + rmistoreserver.helper.RMIStoreServerHelper.TABLE_TRANSACTION
+            + " (id INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY "
+            + "(START WITH 1, INCREMENT BY 1), customer_id INTEGER NOT NULL, "
+            + "item_name VARCHAR(128), item_price FLOAT, isBuy BOOLEAN)";
+    public static final String INSERT_IN_TRANSACTION_TABLE="INSERT INTO "+rmistoreserver.helper.RMIStoreServerHelper.TABLE_TRANSACTION + " (customer_id, item_name, item_price, isBuy) VALUES (?, ?, ?,?)";
     
 }
