@@ -38,8 +38,7 @@ public class RMIStoreServer extends Thread {
             }
             
             ServerRemote rmistoreObj = new ServerRemoteImpl(rmiBankObj);
-            Naming.rebind(RMIStoreServerHelper.RMIStoreName, rmistoreObj);
-            
+            Naming.rebind(RMIStoreServerHelper.RMIStoreName, rmistoreObj);            
         } catch (NotBoundException | MalformedURLException | RemoteException ex) {
             Logger.getLogger(RMIStoreServer.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -5,7 +5,6 @@
  */
 package rmistoreserver.implementations;
 
-
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.Connection;
@@ -35,11 +34,8 @@ import rmistore.commons.interfaces.Bank;
 public class ServerRemoteImpl extends UnicastRemoteObject
         implements rmistore.commons.interfaces.ServerRemote {
 
-    int itemId = 200;
     Bank bankRMIObj;
-    HashMap<Integer, Item> itemHash = new HashMap<>();
     HashMap<Integer, CustomerWrap> customerHash = new HashMap<>();
-    HashMap<String, ArrayList<Wish>> wishHash = new HashMap<>();
     private PreparedStatement insertCustomerStatement;
     private PreparedStatement checkNameExistStatement;
     private PreparedStatement getCustomerPassStatement;
@@ -52,20 +48,19 @@ public class ServerRemoteImpl extends UnicastRemoteObject
     private PreparedStatement getUserItemsStatement;
     private PreparedStatement getAllItemsStatement;
     private PreparedStatement getOtherItemsStatement;
+    private PreparedStatement removeItemStatement;
     private PreparedStatement insertWishStatement;
     private PreparedStatement retrieveWisherStatement;
 
     private Map<String, Account> accounts = new HashMap<>();
-    
 
     public ServerRemoteImpl(Bank bankRMIObj) throws RemoteException {
         this.bankRMIObj = bankRMIObj;
-        try{
-        Connection connection = createDatasource();
-        prepareStatements(connection);
-        }
-        catch(ClassNotFoundException|SQLException sq){
-            
+        try {
+            Connection connection = createDatasource();
+            prepareStatements(connection);
+        } catch (ClassNotFoundException | SQLException sq) {
+
         }
     }
 
@@ -97,12 +92,12 @@ public class ServerRemoteImpl extends UnicastRemoteObject
             Class.forName("COM.cloudscape.core.RmiJdbcDriver");
             return DriverManager.getConnection(
                     "jdbc:cloudscape:rmi://localhost:1099/" + rmistoreserver.helper.RMIStoreServerHelper.RMIStoreDatasource
-                            + ";create=true;");
+                    + ";create=true;");
         } else if (rmistoreserver.helper.RMIStoreServerHelper.RMIStoreDbms.equalsIgnoreCase("pointbase")) {
             Class.forName("com.pointbase.jdbc.jdbcUniversalDriver");
             return DriverManager.getConnection(
                     "jdbc:pointbase:server://localhost:9092/" + rmistoreserver.helper.RMIStoreServerHelper.RMIStoreDatasource
-                            + ",new", "PBPUBLIC", "PBPUBLIC");
+                    + ",new", "PBPUBLIC", "PBPUBLIC");
         } else if (rmistoreserver.helper.RMIStoreServerHelper.RMIStoreDbms.equalsIgnoreCase("derby")) {
             Class.forName("org.apache.derby.jdbc.ClientXADataSource");
             return DriverManager.getConnection(
@@ -121,57 +116,54 @@ public class ServerRemoteImpl extends UnicastRemoteObject
         insertCustomerStatement = connection.prepareStatement(rmistoreserver.helper.RMIStoreServerHelper.INSERT_IN_CUSTOMER_TABLE);
         checkNameExistStatement = connection.prepareStatement(rmistoreserver.helper.RMIStoreServerHelper.CHECKIF_NAME_EXISTS_IN_CUSTOMER_TABLE);
         getCustomerNameStatement = connection.prepareStatement(rmistoreserver.helper.RMIStoreServerHelper.GET_CUSTOMER_NAME);
-        getCustomerPassStatement=connection.prepareStatement(rmistoreserver.helper.RMIStoreServerHelper.RETRIEVE_CUSTOMER_PASS);
-        getCustomerIdStatement=connection.prepareStatement(rmistoreserver.helper.RMIStoreServerHelper.GET_CUSTOMER_ID);
-        insertItemStatement=connection.prepareStatement(rmistoreserver.helper.RMIStoreServerHelper.INSERT_IN_ITEM_TABLE);
-        buyItemStatement=connection.prepareStatement(rmistoreserver.helper.RMIStoreServerHelper.BUY_ITEM);
-        checkItemStatement=connection.prepareStatement(rmistoreserver.helper.RMIStoreServerHelper.CHECK_ITEM);
-        getUserItemsStatement=connection.prepareStatement(rmistoreserver.helper.RMIStoreServerHelper.GET_USER_ITEMS);
-        getAllItemsStatement=connection.prepareStatement(rmistoreserver.helper.RMIStoreServerHelper.GET_ALL_ITEMS);
-        getOtherItemsStatement=connection.prepareStatement(rmistoreserver.helper.RMIStoreServerHelper.GET_OTHER_ITEMS);
-        insertWishStatement=connection.prepareStatement(rmistoreserver.helper.RMIStoreServerHelper.INSERT_IN_WISH_TABLE);
-        retrieveWisherStatement=connection.prepareStatement(rmistoreserver.helper.RMIStoreServerHelper.RETRIEVE_WISH);
+        getCustomerPassStatement = connection.prepareStatement(rmistoreserver.helper.RMIStoreServerHelper.RETRIEVE_CUSTOMER_PASS);
+        getCustomerIdStatement = connection.prepareStatement(rmistoreserver.helper.RMIStoreServerHelper.GET_CUSTOMER_ID);
+        insertItemStatement = connection.prepareStatement(rmistoreserver.helper.RMIStoreServerHelper.INSERT_IN_ITEM_TABLE);
+        buyItemStatement = connection.prepareStatement(rmistoreserver.helper.RMIStoreServerHelper.BUY_ITEM);
+        checkItemStatement = connection.prepareStatement(rmistoreserver.helper.RMIStoreServerHelper.CHECK_ITEM);
+        getUserItemsStatement = connection.prepareStatement(rmistoreserver.helper.RMIStoreServerHelper.GET_USER_ITEMS);
+        getAllItemsStatement = connection.prepareStatement(rmistoreserver.helper.RMIStoreServerHelper.GET_ALL_ITEMS);
+        getOtherItemsStatement = connection.prepareStatement(rmistoreserver.helper.RMIStoreServerHelper.GET_OTHER_ITEMS);
+        removeItemStatement = connection.prepareStatement(rmistoreserver.helper.RMIStoreServerHelper.REMOVE_ITEM);
+        insertWishStatement = connection.prepareStatement(rmistoreserver.helper.RMIStoreServerHelper.INSERT_IN_WISH_TABLE);
+        retrieveWisherStatement = connection.prepareStatement(rmistoreserver.helper.RMIStoreServerHelper.RETRIEVE_WISH);
 
     }
 
-    
-
     @Override
-    public synchronized rmistore.commons.interfaces.CustomerRemote register(String name,String pass,
+    public synchronized rmistore.commons.interfaces.CustomerRemote register(String name, String pass,
             rmistore.commons.interfaces.ClientRemote clientRemote)
             throws RemoteException, rmistore.commons.exceptions.Rejected {
-        int id=0;
+        int id = 0;
         //check uniqueness of name
-        try{
-        checkNameExistStatement.setString(1, name);
-        ResultSet rs= checkNameExistStatement.executeQuery();
-        if(rs.next()){
-            throw new Rejected("Name already in use. Please choose another name.");
-        }
-        else{
-            //open account
-            Account acc= bankRMIObj.newAccount(name);
-            //insert customer in DB
-            insertCustomerStatement.setString(1, name);
-            insertCustomerStatement.setString(2, pass);
-            insertCustomerStatement.setInt(3, acc.getAccountNumber());
-            int rowsChanged= insertCustomerStatement.executeUpdate();
-            System.out.println("Customer "+name+" registered in db");
-        }
-        
-        getCustomerIdStatement.setString(1, name);
-        ResultSet customerIdRes= getCustomerIdStatement.executeQuery();
-        while(customerIdRes.next()){
-            id=customerIdRes.getInt(1);
-        }
-        customerHash.put(id, new CustomerWrap(name, clientRemote));
-        rmistore.commons.interfaces.CustomerRemote client = new CustomerRemoteImpl(id, this);
-        clientRemote.receiveMessage("Welcome!");
-        return client;
-        }
-        catch(SQLException sq){
-            
-            return null;  
+        try {
+            checkNameExistStatement.setString(1, name);
+            ResultSet rs = checkNameExistStatement.executeQuery();
+            if (rs.next()) {
+                throw new Rejected("Name already in use. Please choose another name.");
+            } else {
+                //open account
+                Account acc = bankRMIObj.newAccount(name);
+                //insert customer in DB
+                insertCustomerStatement.setString(1, name);
+                insertCustomerStatement.setString(2, pass);
+                insertCustomerStatement.setInt(3, acc.getAccountNumber());
+                int rowsChanged = insertCustomerStatement.executeUpdate();
+                System.out.println("Customer " + name + " registered in db");
+            }
+
+            getCustomerIdStatement.setString(1, name);
+            ResultSet customerIdRes = getCustomerIdStatement.executeQuery();
+            while (customerIdRes.next()) {
+                id = customerIdRes.getInt(1);
+            }
+            customerHash.put(id, new CustomerWrap(name, clientRemote));
+            rmistore.commons.interfaces.CustomerRemote client = new CustomerRemoteImpl(id, this);
+            clientRemote.receiveMessage("Welcome!");
+            return client;
+        } catch (SQLException sq) {
+
+            return null;
         }
     }
 
@@ -180,33 +172,56 @@ public class ServerRemoteImpl extends UnicastRemoteObject
         return true;
     }
 
-    public synchronized int getItemId() {
-        return itemId++;
+    public synchronized rmistore.commons.interfaces.CustomerRemote login(String name, String pass,
+            rmistore.commons.interfaces.ClientRemote clientRemote)
+            throws RemoteException, rmistore.commons.exceptions.Rejected {
+        try {
+            //check username and password
+            getCustomerPassStatement.setString(1, name);
+            ResultSet rs = getCustomerPassStatement.executeQuery();
+            while (rs.next()) {
+                if (!rs.getString("pass").equals(pass)) {
+                    throw new Rejected("Username or password is incorrect.");
+                }
+            }
+            int id = 0;
+            getCustomerIdStatement.setString(1, name);
+            ResultSet customerIdRes = getCustomerIdStatement.executeQuery();
+            while (customerIdRes.next()) {
+                id = customerIdRes.getInt(1);
+            }
+            customerHash.put(id, new CustomerWrap(name, clientRemote));
+            rmistore.commons.interfaces.CustomerRemote client = new CustomerRemoteImpl(id, this);
+            clientRemote.receiveMessage("Welcome!");
+            return client;
+        } catch (SQLException ex) {
+            Logger.getLogger(ServerRemoteImpl.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
 
     public synchronized boolean addItem(String itemName, Float price, int quantity, int seller_id) {
-        try{
-            try{
+        try {
+            try {
                 insertItemStatement.setString(1, itemName);
                 insertItemStatement.setFloat(2, price);
                 insertItemStatement.setInt(3, quantity);
                 insertItemStatement.setInt(4, seller_id);
-                int rowschanged= insertItemStatement.executeUpdate();
-                if(rowschanged==1){
+                int rowschanged = insertItemStatement.executeUpdate();
+                if (rowschanged == 1) {
                     System.out.println("added");
-                }
-                else
+                } else {
                     System.out.println("not added");
-            }
-            catch(SQLException sq){
-                
+                }
+            } catch (SQLException sq) {
+
             }
             //notify wishList customers
             retrieveWisherStatement.setString(1, itemName);
-            ResultSet rs= retrieveWisherStatement.executeQuery();
-            while(rs.next()){
-                if(itemName.contains(rs.getString("name"))){
-                    if(rs.getFloat("price")<=price){
+            ResultSet rs = retrieveWisherStatement.executeQuery();
+            while (rs.next()) {
+                if (itemName.contains(rs.getString("name"))) {
+                    if (rs.getFloat("price") <= price) {
                         Thread notificationThread = new NotificationThread(rs.getInt("wisher_id"),
                                 rs.getString("name"), rs.getFloat("price"));
                         notificationThread.start();
@@ -214,73 +229,79 @@ public class ServerRemoteImpl extends UnicastRemoteObject
                 }
             }
             return true;
-        }
-        catch(SQLException ex){
+        } catch (SQLException ex) {
             Logger.getLogger(ServerRemoteImpl.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
     }
 
     public synchronized boolean removeItem(int itemId) {
-        itemHash.remove(itemId);
-        return true;
+        try {
+            //itemHash.remove(itemId);
+            removeItemStatement.setInt(1, itemId);
+            int rowschanged = removeItemStatement.executeUpdate();
+            return rowschanged == 1;
+        } catch (SQLException ex) {
+            Logger.getLogger(ServerRemoteImpl.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
     }
 
     public synchronized boolean buyItem(int customerId, int itemId) {
-        float itemPrice=0;
-        int seller_id=0;
+        float itemPrice = 0;
+        int seller_id = 0;
         String itemName = null;
         try {
-                checkItemStatement.setInt(1, itemId);
-                ResultSet rs= checkItemStatement.executeQuery();
-                while(rs.next()){
-                    itemPrice=rs.getInt("price");
-                    seller_id=rs.getInt("seller_id");
-                    itemName=rs.getString("name");
-                }
-                // the thread function requires these variable to be 'final' :(
-                final int seller=seller_id;
-                final String name_of_item=itemName;
-                if (bankRMIObj.getAccount(customerHash.get(customerId).getName()).getBalance() >= itemPrice) {
-                    //final Item item = itemHash.get(itemId);
-                    buyItemStatement.setInt(1, itemId);
-                    int rowsChanged= buyItemStatement.executeUpdate();
-          
-                    //credit to seller and debit to buyer
-                    Thread sellNotificationThread = new Thread() {
+            checkItemStatement.setInt(1, itemId);
+            ResultSet rs = checkItemStatement.executeQuery();
+            while (rs.next()) {
+                itemPrice = rs.getInt("price");
+                seller_id = rs.getInt("seller_id");
+                itemName = rs.getString("name");
+            }
+            // the thread function requires these variable to be 'final' :(
+            final int seller = seller_id;
+            final String name_of_item = itemName;
+            if (bankRMIObj.getAccount(customerHash.get(customerId).getName()).getBalance() >= itemPrice) {
+                //final Item item = itemHash.get(itemId);
+                buyItemStatement.setInt(1, itemId);
+                int rowsChanged = buyItemStatement.executeUpdate();
 
-                        @Override
-                        public void run() {
+                //credit to seller and debit to buyer
+                Thread sellNotificationThread = new Thread() {
 
-                            try {
-                                ServerRemoteImpl.this.getClientObj(seller).receiveMessage("Your item " + name_of_item + " sold. Money credited to your account.");
-                            } catch (RemoteException ex) {
-                                Logger.getLogger(ServerRemoteImpl.class.getName()).log(Level.SEVERE, null, ex);
-                            }
+                    @Override
+                    public void run() {
+
+                        try {
+                            ServerRemoteImpl.this.getClientObj(seller).receiveMessage("Your item " + name_of_item + " sold. Money credited to your account.");
+                        } catch (RemoteException ex) {
+                            Logger.getLogger(ServerRemoteImpl.class.getName()).log(Level.SEVERE, null, ex);
                         }
+                    }
 
-                    };
-                    sellNotificationThread.start();
-                    try {
-                        bankRMIObj.getAccount(customerHash.get(seller_id).getName()).deposit(itemPrice);
-                    } catch (Rejected r) {
-                        this.getClientObj(seller_id).receiveMessage("Exception: "+r);
-                    }
-                    try {
-                        bankRMIObj.getAccount(customerHash.get(customerId).getName()).withdraw(itemPrice);
-                    } catch (Rejected r) {
-                        this.getClientObj(customerId).receiveMessage("Exception: "+r);
-                    }
-                    return true;
-                } else {
-                    this.getClientObj(customerId).receiveMessage("Insufficient balance");
-                    return false;
+                };
+                sellNotificationThread.start();
+                try {
+                    bankRMIObj.getAccount(customerHash.get(seller_id).getName()).deposit(itemPrice);
+                } catch (Rejected r) {
+                    this.getClientObj(seller_id).receiveMessage("Exception: " + r);
                 }
-        } catch (SQLException| RemoteException ex) {
+                try {
+                    bankRMIObj.getAccount(customerHash.get(customerId).getName()).withdraw(itemPrice);
+                } catch (Rejected r) {
+                    this.getClientObj(customerId).receiveMessage("Exception: " + r);
+                }
+                return true;
+            } else {
+                this.getClientObj(customerId).receiveMessage("Insufficient balance");
+                return false;
+            }
+        } catch (SQLException | RemoteException ex) {
             System.out.println("Remote Exception: " + ex);
 
             return false;
-        } 
+        }
     }
 
     public ClientRemote getClientObj(int customerId) {
@@ -289,11 +310,11 @@ public class ServerRemoteImpl extends UnicastRemoteObject
 
     public ArrayList<Item> getUserItemsFromHash(int customerId) {
         try {
-            ArrayList<Item> items=new ArrayList<>();
+            ArrayList<Item> items = new ArrayList<>();
             getUserItemsStatement.setInt(1, customerId);
-            ResultSet rs= getUserItemsStatement.executeQuery();
-            while(rs.next()){
-                Item i=new Item(rs.getInt("id"),rs.getInt("seller_id"),rs.getString("name"),rs.getFloat("price"));
+            ResultSet rs = getUserItemsStatement.executeQuery();
+            while (rs.next()) {
+                Item i = new Item(rs.getInt("id"), rs.getInt("seller_id"), rs.getString("name"), rs.getFloat("price"));
                 items.add(i);
             }
             return items;
@@ -305,10 +326,10 @@ public class ServerRemoteImpl extends UnicastRemoteObject
 
     public ArrayList<Item> getAllItemsFromHash() {
         try {
-            ArrayList<Item> items=new ArrayList<>();
-            ResultSet rs= getUserItemsStatement.executeQuery();
-            while(rs.next()){
-                Item i=new Item(rs.getInt("id"),rs.getInt("seller_id"),rs.getString("name"),rs.getFloat("price"));
+            ArrayList<Item> items = new ArrayList<>();
+            ResultSet rs = getUserItemsStatement.executeQuery();
+            while (rs.next()) {
+                Item i = new Item(rs.getInt("id"), rs.getInt("seller_id"), rs.getString("name"), rs.getFloat("price"));
                 items.add(i);
             }
             return items;
@@ -323,8 +344,8 @@ public class ServerRemoteImpl extends UnicastRemoteObject
             insertWishStatement.setString(1, name);
             insertWishStatement.setFloat(2, price);
             insertWishStatement.setInt(3, customerId);
-            int rowsChanged=insertWishStatement.executeUpdate();
-            if(rowsChanged==1){
+            int rowsChanged = insertWishStatement.executeUpdate();
+            if (rowsChanged == 1) {
                 try {
                     ServerRemoteImpl.this.getClientObj(customerId).receiveMessage(
                             "Your wish for " + name + " for $" + price + " has been added!");
@@ -339,11 +360,11 @@ public class ServerRemoteImpl extends UnicastRemoteObject
 
     ArrayList<Item> getOtherItems(int customerId) {
         try {
-            ArrayList<Item> items=new ArrayList<>();
+            ArrayList<Item> items = new ArrayList<>();
             getOtherItemsStatement.setInt(1, customerId);
-            ResultSet rs= getUserItemsStatement.executeQuery();
-            while(rs.next()){
-                Item i=new Item(rs.getInt("id"),rs.getInt("seller_id"),rs.getString("name"),rs.getFloat("price"));
+            ResultSet rs = getUserItemsStatement.executeQuery();
+            while (rs.next()) {
+                Item i = new Item(rs.getInt("id"), rs.getInt("seller_id"), rs.getString("name"), rs.getFloat("price"));
                 items.add(i);
             }
             return items;
@@ -367,14 +388,15 @@ public class ServerRemoteImpl extends UnicastRemoteObject
     }
 
     private class NotificationThread extends Thread {
+
         private final int wisherId;
         private final String itemName;
         private final float itemPrice;
 
-        public NotificationThread(int wisherId, String itemName, float itemPrice){
-            this.wisherId=wisherId;
-            this.itemName=itemName;
-            this.itemPrice=itemPrice;
+        public NotificationThread(int wisherId, String itemName, float itemPrice) {
+            this.wisherId = wisherId;
+            this.itemName = itemName;
+            this.itemPrice = itemPrice;
         }
 
         @Override

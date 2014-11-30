@@ -26,16 +26,11 @@ implements rmistore.commons.interfaces.CustomerRemote {
 
     @Override
     public synchronized void sellItem(String itemName, float price, int quantity) throws Rejected,RemoteException{
-        //int id=serverRemoteObj.getItemId();
-        //Item item=new Item(id,this.myId,itemName,price);
-        
         if(this.serverRemoteObj.addItem(itemName, price, quantity,myId)==false){
             throw new Rejected("Could not be added to sell list");
         }
         else
            this.serverRemoteObj.getClientObj(myId).receiveMessage("Item listed for selling");
-        
-            
     }
     
     @Override

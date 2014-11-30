@@ -47,7 +47,7 @@ public class RMIStoreServerHelper {
     public static final String GET_USER_ITEMS="SELECT * FROM "+rmistoreserver.helper.RMIStoreServerHelper.TABLE_CUSTOMER+ " WHERE seller_id = ?";
     public static final String GET_ALL_ITEMS="SELECT * FROM "+rmistoreserver.helper.RMIStoreServerHelper.TABLE_CUSTOMER;
     public static final String GET_OTHER_ITEMS="SELECT * FROM "+rmistoreserver.helper.RMIStoreServerHelper.TABLE_CUSTOMER+ " WHERE seller_id != ?";
-
+    public static final String REMOVE_ITEM="UPDATE "+ rmistoreserver.helper.RMIStoreServerHelper.TABLE_CUSTOMER+ "SET quantity = 0 WHERE id = ?";
 
 
 //wish table
