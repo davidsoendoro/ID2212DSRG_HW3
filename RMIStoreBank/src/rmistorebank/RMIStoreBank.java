@@ -35,7 +35,7 @@ public class RMIStoreBank extends Thread {
 
         try {            
             Bank rmiBankObj = new BankImpl(RMIStoreBankHelper.RMIDatasource, RMIStoreBankHelper.RMIDbms);
-            Naming.rebind(RMIStoreBankHelper.RMIBankName, rmiBankObj);
+            Naming.rebind(RMIStoreBankHelper.RMIBankName, rmiBankObj);            
         } catch (RemoteException | MalformedURLException | ClassNotFoundException | SQLException ex) {
             Logger.getLogger(RMIStoreBank.class.getName()).log(Level.SEVERE, null, ex);
         }

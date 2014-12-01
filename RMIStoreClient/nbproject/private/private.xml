@@ -5,7 +5,7 @@
             <url>src/rmistoreclient/ui/RMIStoreClientMain.java</url>
             <bookmark id="2">
                 <name/>
-                <line>33</line>
+                <line>34</line>
                 <key/>
             </bookmark>
         </file>
@@ -13,7 +13,7 @@
             <url>src/rmistoreclient/ui/tabs/RMIStoreClientSellPanel.java</url>
             <bookmark id="1">
                 <name/>
-                <line>124</line>
+                <line>142</line>
                 <key/>
             </bookmark>
         </file>
@@ -21,6 +21,11 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group/>
         <group name="ID2212DSRG_HW2"/>
-        <group name="ID2212DSRG_HW3"/>
+        <group name="ID2212DSRG_HW3">
+            <file>file:/Users/davidsoendoro/ID2212DSRG_HW3/RMIStoreClient/src/rmistoreclient/implementations/CustomerRemoteThreadImpl.java</file>
+            <file>file:/Users/davidsoendoro/ID2212DSRG_HW3/RMIStoreClient/src/rmistoreclient/ui/RMIStoreClientLogin.java</file>
+            <file>file:/Users/davidsoendoro/ID2212DSRG_HW3/RMIStoreClient/src/rmistoreclient/ui/tabs/RMIStoreClientSellPanel.java</file>
+            <file>file:/Users/davidsoendoro/ID2212DSRG_HW3/RMIStoreClient/src/rmistore/commons/interfaces/CustomerRemote.java</file>
+        </group>
     </open-files>
 </project-private>

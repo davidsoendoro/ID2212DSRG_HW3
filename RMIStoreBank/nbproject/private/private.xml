@@ -4,11 +4,11 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group/>
         <group name="ID2212DSRG_HW3">
-            <file>file:/Users/davidsoendoro/ID2212DSRG_HW3/RMIStoreBank/src/rmistore/commons/interfaces/AccountImpl.java</file>
-            <file>file:/Users/davidsoendoro/ID2212DSRG_HW3/RMIStoreBank/src/rmistore/commons/interfaces/BankImpl.java</file>
-            <file>file:/Users/davidsoendoro/ID2212DSRG_HW3/RMIStoreBank/src/rmistore/commons/interfaces/Account.java</file>
+            <file>file:/Users/davidsoendoro/ID2212DSRG_HW3/RMIStoreBank/src/rmistore/commons/interfaces/Bank.java</file>
             <file>file:/Users/davidsoendoro/ID2212DSRG_HW3/RMIStoreBank/src/rmistorebank/helper/RMIStoreBankHelper.java</file>
+            <file>file:/Users/davidsoendoro/ID2212DSRG_HW3/RMIStoreBank/src/rmistore/commons/interfaces/Account.java</file>
             <file>file:/Users/davidsoendoro/ID2212DSRG_HW3/RMIStoreBank/src/rmistorebank/RMIStoreBank.java</file>
+            <file>file:/Users/davidsoendoro/ID2212DSRG_HW3/RMIStoreBank/src/rmistore/commons/interfaces/BankImpl.java</file>
         </group>
     </open-files>
 </project-private>

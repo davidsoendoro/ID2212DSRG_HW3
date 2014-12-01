@@ -48,8 +48,8 @@ public class BankImpl extends UnicastRemoteObject implements Bank {
         if (!exist) {
             Statement statement = connection.createStatement();
             statement.executeUpdate("CREATE TABLE " + RMIStoreBankHelper.TABLE_ACCOUNT_NAME
-                    + " ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY"
-                    + "(START WITH 1, INCREMENT BY 1, name VARCHAR(128), balance FLOAT)");
+                    + " (ID INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY"
+                    + "(START WITH 1, INCREMENT BY 1), name VARCHAR(128) UNIQUE, balance FLOAT)");
         }
         return connection;
     }
@@ -82,7 +82,8 @@ public class BankImpl extends UnicastRemoteObject implements Bank {
 
     private void prepareStatements(Connection connection) throws SQLException {
         createAccountStatement = connection.prepareStatement("INSERT INTO "
-                + RMIStoreBankHelper.TABLE_ACCOUNT_NAME + " (name, balance) VALUES (?, 0)");
+                + RMIStoreBankHelper.TABLE_ACCOUNT_NAME + " (name, balance)"
+                + " VALUES (?, 0)", 1);
         findAccountStatement = connection.prepareStatement("SELECT * from "
                 + RMIStoreBankHelper.TABLE_ACCOUNT_NAME + " WHERE NAME = ?");
         deleteAccountStatement = connection.prepareStatement("DELETE FROM "
@@ -111,7 +112,7 @@ public class BankImpl extends UnicastRemoteObject implements Bank {
 
             if (result.next()) {
                 // account exists, instantiate, put in cache and throw exception.
-                account = new AccountImpl(name, result.getFloat("balance"),
+                account = new AccountImpl(result.getInt("id"), name, result.getFloat("balance"), 
                         getConnection());
                 accounts.put(name, account);
                 throw new Rejected("Rejected: Account for: " + name
@@ -122,8 +123,12 @@ public class BankImpl extends UnicastRemoteObject implements Bank {
             // create account.
             createAccountStatement.setString(1, name);
             int rows = createAccountStatement.executeUpdate();
+            createAccountStatement.getGeneratedKeys().next();
+            long id = createAccountStatement.getGeneratedKeys().getInt(1);
+            System.out.println(id);
             if (rows == 1) {
-                account = new AccountImpl(name, getConnection());
+                account = new AccountImpl(id, 
+                        name, getConnection());
                 accounts.put(name, account);
                 System.out.println("Bank: Account: " + account
                         + " has been created for " + name);
@@ -150,7 +155,7 @@ public class BankImpl extends UnicastRemoteObject implements Bank {
                 findAccountStatement.setString(1, name);
                 ResultSet result = findAccountStatement.executeQuery();
                 if (result.next()) {
-                    acct = new AccountImpl(result.getString("name"),
+                    acct = new AccountImpl(result.getInt("id"), result.getString("name"),
                             result.getFloat("balance"), getConnection());
                     result.close();
                     accounts.put(name, acct);

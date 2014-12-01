@@ -10,5 +10,5 @@ public interface Account extends Remote {
 
     public void withdraw(float value) throws RemoteException, rmistore.commons.exceptions.Rejected;
     
-    public int getAccountNumber() throws RemoteException;
+    public long getAccountNumber() throws RemoteException;
 }

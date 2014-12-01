@@ -5,17 +5,53 @@
  */
 package rmistoreclient.ui;
 
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import rmistore.commons.exceptions.Rejected;
+import rmistore.commons.interfaces.Bank;
+import rmistore.commons.interfaces.ClientRemote;
+import rmistore.commons.interfaces.CustomerRemote;
+import rmistore.commons.interfaces.ServerRemote;
+import rmistoreclient.helper.RMIStoreClientHelper;
+import rmistoreclient.implementations.AccountThreadImpl;
+import rmistoreclient.implementations.ClientRemoteImpl;
+import rmistoreclient.implementations.CustomerRemoteThreadImpl;
+import rmistoreclient.interfaces.Callback;
+
 /**
  *
  * @author davidsoendoro
  */
 public class RMIStoreClientLogin extends javax.swing.JFrame {
 
+    private ServerRemote rmistoreObj;
+    
     /**
      * Creates new form RMIStoreClientLogin
      */
     public RMIStoreClientLogin() {
         initComponents();
+        
+        new Thread() {
+
+            @Override
+            public void run() {
+                try {
+                    rmistoreObj = (ServerRemote)Naming.lookup(
+                            RMIStoreClientHelper.RMIStoreName);
+                    jButtonLogin.setEnabled(true);
+                    jButtonRegister.setEnabled(true);
+                    
+                } catch (NotBoundException | MalformedURLException | RemoteException ex) {
+                    Logger.getLogger(RMIStoreClientLogin.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            
+        }.start();
     }
 
     /**
@@ -27,21 +63,148 @@ public class RMIStoreClientLogin extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabelLogin = new javax.swing.JLabel();
+        jSeparator = new javax.swing.JSeparator();
+        jLabelUsername = new javax.swing.JLabel();
+        jLabelPassword = new javax.swing.JLabel();
+        jTextFieldUsername = new javax.swing.JTextField();
+        jButtonLogin = new javax.swing.JButton();
+        jSeparatorVertical = new javax.swing.JSeparator();
+        jLabelRegister = new javax.swing.JLabel();
+        jButtonRegister = new javax.swing.JButton();
+        jPasswordField = new javax.swing.JPasswordField();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jLabelLogin.setFont(new java.awt.Font("Lucida Grande", 1, 36)); // NOI18N
+        jLabelLogin.setText("Welcome to RMIStore!");
+
+        jLabelUsername.setText("Username");
+
+        jLabelPassword.setText("Password");
+
+        jButtonLogin.setText("Login");
+        jButtonLogin.setEnabled(false);
+        jButtonLogin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonLoginActionPerformed(evt);
+            }
+        });
+
+        jSeparatorVertical.setOrientation(javax.swing.SwingConstants.VERTICAL);
+
+        jLabelRegister.setText("Not a member yet? Register now for free!");
+
+        jButtonRegister.setFont(new java.awt.Font("Lucida Grande", 1, 24)); // NOI18N
+        jButtonRegister.setText("REGISTER");
+        jButtonRegister.setEnabled(false);
+        jButtonRegister.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonRegisterActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jSeparator)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabelLogin)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(jLabelPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(jLabelUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jTextFieldUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jButtonLogin))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSeparatorVertical, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabelRegister)
+                            .addComponent(jButtonRegister, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jLabelLogin)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabelUsername)
+                            .addComponent(jTextFieldUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabelPassword)
+                            .addComponent(jPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButtonLogin))
+                    .addComponent(jSeparatorVertical)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabelRegister)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonRegister, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGap(0, 138, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButtonRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRegisterActionPerformed
+        RMIStoreClientRegister registerPage = new RMIStoreClientRegister();
+        registerPage.setRmistoreObj(rmistoreObj);
+        registerPage.setLoginPage(this);
+        registerPage.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_jButtonRegisterActionPerformed
+
+    private void jButtonLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLoginActionPerformed
+        Thread loginThread = new Thread() {
+
+            @Override
+            public void run() {
+                try {
+                    RMIStoreClientHelper.currentFrame = RMIStoreClientLogin.this;
+                    RMIStoreClientHelper.clientRemoteObj = new ClientRemoteImpl();
+                    CustomerRemote customerRemote = 
+                            rmistoreObj.login(jTextFieldUsername.getText(),
+                            new String(jPasswordField.getPassword()),
+                            RMIStoreClientHelper.clientRemoteObj);
+                    RMIStoreClientHelper.customerRemoteObj = 
+                            new CustomerRemoteThreadImpl(customerRemote);
+                    
+                    // Connect to Bank
+                    Bank rmiBankObj = (Bank)Naming.lookup(
+                            RMIStoreClientHelper.RMIBankName);
+                    RMIStoreClientHelper.accountObj = new AccountThreadImpl(
+                            rmiBankObj.getAccount(jTextFieldUsername.getText()));
+                    
+                    RMIStoreClientMain rmiStoreClientMain = 
+                            new RMIStoreClientMain(RMIStoreClientLogin.this, 
+                                    jTextFieldUsername.getText());
+                    rmiStoreClientMain.setVisible(true);
+                    RMIStoreClientLogin.this.setVisible(false);
+                } catch (RemoteException | Rejected | NotBoundException | MalformedURLException ex) {
+                    Logger.getLogger(RMIStoreClientLogin.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            
+        };
+        loginThread.start();
+    }//GEN-LAST:event_jButtonLoginActionPerformed
 
     /**
      * @param args the command line arguments
@@ -79,5 +242,16 @@ public class RMIStoreClientLogin extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButtonLogin;
+    private javax.swing.JButton jButtonRegister;
+    private javax.swing.JLabel jLabelLogin;
+    private javax.swing.JLabel jLabelPassword;
+    private javax.swing.JLabel jLabelRegister;
+    private javax.swing.JLabel jLabelUsername;
+    private javax.swing.JPasswordField jPasswordField;
+    private javax.swing.JSeparator jSeparator;
+    private javax.swing.JSeparator jSeparatorVertical;
+    private javax.swing.JTextField jTextFieldUsername;
     // End of variables declaration//GEN-END:variables
+
 }

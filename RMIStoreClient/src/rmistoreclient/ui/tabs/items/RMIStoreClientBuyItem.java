@@ -99,7 +99,7 @@ public class RMIStoreClientBuyItem extends javax.swing.JPanel {
         else {
             try {
                 RMIStoreClientHelper.customerRemoteObj.wishItem(this.item.getName(), 
-                        Double.parseDouble(jTextFieldWishPrice.getText()));
+                        Float.parseFloat(jTextFieldWishPrice.getText()));
             } catch (Rejected | RemoteException ex) {
                 Logger.getLogger(RMIStoreClientBuyItem.class.getName()).log(Level.SEVERE, null, ex);
             }

@@ -13,11 +13,13 @@ public class AccountImpl extends UnicastRemoteObject implements Account {
     
     private double balance = 0;
     private String name;
+    private long id;
     private PreparedStatement updateStatement;
 
-    public AccountImpl(String name, float balance, Connection connection)
+    public AccountImpl(long id, String name, float balance, Connection connection)
             throws RemoteException, Rejected {
         super();
+        this.id = id;
         this.name = name;
         this.balance = balance;
         try {
@@ -30,9 +32,9 @@ public class AccountImpl extends UnicastRemoteObject implements Account {
         }
     }
 
-    public AccountImpl(String name, Connection connection)
+    public AccountImpl(long id, String name, Connection connection)
             throws RemoteException, Rejected {
-        this(name, 0, connection);
+        this(id, name, 0, connection);
     }
 
     @Override
@@ -102,5 +104,10 @@ public class AccountImpl extends UnicastRemoteObject implements Account {
     @Override
     public synchronized double getBalance() throws RemoteException {
         return balance;
+    }
+
+    @Override
+    public long getAccountNumber() throws RemoteException {
+        return id;
     }
 }

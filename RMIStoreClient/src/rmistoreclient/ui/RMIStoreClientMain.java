@@ -5,6 +5,7 @@
  */
 package rmistoreclient.ui;
 
+import javax.swing.JOptionPane;
 import rmistoreclient.helper.RMIStoreClientHelper;
 import rmistoreclient.implementations.ClientRemoteImpl;
 import rmistoreclient.ui.tabs.RMIStoreClientAccountPanel;
@@ -57,6 +58,9 @@ public class RMIStoreClientMain extends javax.swing.JFrame {
         jTabbedPaneMain = new javax.swing.JTabbedPane();
         jLabelGreetings = new javax.swing.JLabel();
         jProgressBar = new javax.swing.JProgressBar();
+        jMenuBar = new javax.swing.JMenuBar();
+        jMenuLogout = new javax.swing.JMenu();
+        jMenuAbout = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -68,6 +72,32 @@ public class RMIStoreClientMain extends javax.swing.JFrame {
 
         jLabelGreetings.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         jLabelGreetings.setText("Hi, !");
+
+        jMenuLogout.setText("Logout");
+        jMenuLogout.addMenuListener(new javax.swing.event.MenuListener() {
+            public void menuSelected(javax.swing.event.MenuEvent evt) {
+                jMenuLogoutMenuSelected(evt);
+            }
+            public void menuDeselected(javax.swing.event.MenuEvent evt) {
+            }
+            public void menuCanceled(javax.swing.event.MenuEvent evt) {
+            }
+        });
+        jMenuBar.add(jMenuLogout);
+
+        jMenuAbout.setText("About");
+        jMenuAbout.addMenuListener(new javax.swing.event.MenuListener() {
+            public void menuSelected(javax.swing.event.MenuEvent evt) {
+                jMenuAboutMenuSelected(evt);
+            }
+            public void menuDeselected(javax.swing.event.MenuEvent evt) {
+            }
+            public void menuCanceled(javax.swing.event.MenuEvent evt) {
+            }
+        });
+        jMenuBar.add(jMenuAbout);
+
+        setJMenuBar(jMenuBar);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -92,11 +122,11 @@ public class RMIStoreClientMain extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabelGreetings, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(305, Short.MAX_VALUE))
+                .addContainerGap(283, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(40, 40, 40)
-                    .addComponent(jTabbedPaneMain, javax.swing.GroupLayout.DEFAULT_SIZE, 307, Short.MAX_VALUE)
+                    .addComponent(jTabbedPaneMain, javax.swing.GroupLayout.DEFAULT_SIZE, 285, Short.MAX_VALUE)
                     .addContainerGap()))
         );
 
@@ -114,6 +144,23 @@ public class RMIStoreClientMain extends javax.swing.JFrame {
             accountTab.refreshBalance();
         }
     }//GEN-LAST:event_jTabbedPaneMainStateChanged
+
+    private void jMenuLogoutMenuSelected(javax.swing.event.MenuEvent evt) {//GEN-FIRST:event_jMenuLogoutMenuSelected
+        // Send Logout message:
+        
+        // If logout success send this:
+        this.setVisible(false);
+        caller.setVisible(true);
+        
+        // If logout failed send this:
+//        JOptionPane.showMessageDialog(RMIStoreClientMain.this, "???");
+    }//GEN-LAST:event_jMenuLogoutMenuSelected
+
+    private void jMenuAboutMenuSelected(javax.swing.event.MenuEvent evt) {//GEN-FIRST:event_jMenuAboutMenuSelected
+        JOptionPane.showMessageDialog(RMIStoreClientMain.this, "RMIStore is a marketplace created with Java RMI.\n"
+                + "Created by David Soendoro <soendoro@kth.se> and Rohit Goyal <rohitg@kth.se>\n"
+                + "KTH 2014");
+    }//GEN-LAST:event_jMenuAboutMenuSelected
 
     /**
      * @param args the command line arguments
@@ -152,6 +199,9 @@ public class RMIStoreClientMain extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabelGreetings;
+    private javax.swing.JMenu jMenuAbout;
+    private javax.swing.JMenuBar jMenuBar;
+    private javax.swing.JMenu jMenuLogout;
     private javax.swing.JProgressBar jProgressBar;
     private javax.swing.JTabbedPane jTabbedPaneMain;
     // End of variables declaration//GEN-END:variables

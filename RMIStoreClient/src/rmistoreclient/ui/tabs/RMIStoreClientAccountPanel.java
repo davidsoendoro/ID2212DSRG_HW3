@@ -10,7 +10,6 @@ import java.text.DecimalFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static javax.swing.JOptionPane.showMessageDialog;
-import rmistore.commons.exceptions.Rejected;
 import rmistoreclient.helper.RMIStoreClientHelper;
 import rmistoreclient.interfaces.BalanceDisplayer;
 import rmistoreclient.interfaces.Callback;

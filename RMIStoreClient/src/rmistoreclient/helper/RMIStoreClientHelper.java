@@ -16,7 +16,7 @@ import rmistoreclient.implementations.CustomerRemoteThreadImpl;
  */
 public class RMIStoreClientHelper {
     
-    public static final String RMIStoreName = "rmi://localhost:1100/RMIStore";
+    public static final String RMIStoreName = "//localhost:1100/RMIStore";
     public static final String RMIBankName = "//localhost:1101/RMIStoreBank";
     
     // SERVER REMOTE COMMAND

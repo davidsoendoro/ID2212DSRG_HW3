@@ -32,7 +32,7 @@ public class CustomerRemoteThreadImpl implements CustomerRemote {
     }
 
     @Override
-    public void sellItem(final String itemName, final double price) throws Rejected, RemoteException {
+    public void sellItem(final String itemName, final float price, final int quantity) throws Rejected, RemoteException {
         if(!isCalling) {
             new Thread() {
 
@@ -41,7 +41,7 @@ public class CustomerRemoteThreadImpl implements CustomerRemote {
                     try {
                         RMIStoreClientHelper.customerRemoteObj.getLoader().setIndeterminate(true);
                         isCalling = true;
-                        customerRemoteObj.sellItem(itemName, price);
+                        customerRemoteObj.sellItem(itemName, price, quantity);
                         callback.doCallback("sellItem");
                         RMIStoreClientHelper.customerRemoteObj.getLoader().setIndeterminate(false);
                     } catch (Rejected | RemoteException ex) {
@@ -101,7 +101,7 @@ public class CustomerRemoteThreadImpl implements CustomerRemote {
     }
 
     @Override
-    public void wishItem(final String name, final double price) throws Rejected, RemoteException {
+    public void wishItem(final String name, final float price) throws Rejected, RemoteException {
         if(!isCalling) {
             new Thread() {
 

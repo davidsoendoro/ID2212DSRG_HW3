@@ -55,12 +55,12 @@ public class ServerRemoteImpl extends UnicastRemoteObject
     private Map<String, Account> accounts = new HashMap<>();
 
     public ServerRemoteImpl(Bank bankRMIObj) throws RemoteException {
-        this.bankRMIObj = bankRMIObj;
         try {
+            this.bankRMIObj = bankRMIObj;
             Connection connection = createDatasource();
             prepareStatements(connection);
-        } catch (ClassNotFoundException | SQLException sq) {
-
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(ServerRemoteImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -102,7 +102,7 @@ public class ServerRemoteImpl extends UnicastRemoteObject
             Class.forName("org.apache.derby.jdbc.ClientXADataSource");
             return DriverManager.getConnection(
                     "jdbc:derby://localhost:1527/" + rmistoreserver.helper.RMIStoreServerHelper.RMIStoreDatasource + ";create=true",
-                    "rmibank", "nescafe");
+                    "rmistore", "nescafe");
         } else if (rmistoreserver.helper.RMIStoreServerHelper.RMIStoreDbms.equalsIgnoreCase("mysql")) {
             Class.forName("com.mysql.jdbc.Driver");
             return DriverManager.getConnection(
@@ -131,8 +131,7 @@ public class ServerRemoteImpl extends UnicastRemoteObject
     }
 
     @Override
-    public synchronized rmistore.commons.interfaces.CustomerRemote register(String name, String pass,
-            rmistore.commons.interfaces.ClientRemote clientRemote)
+    public synchronized void register(String name, String pass)
             throws RemoteException, rmistore.commons.exceptions.Rejected {
         int id = 0;
         //check uniqueness of name
@@ -147,7 +146,7 @@ public class ServerRemoteImpl extends UnicastRemoteObject
                 //insert customer in DB
                 insertCustomerStatement.setString(1, name);
                 insertCustomerStatement.setString(2, pass);
-                insertCustomerStatement.setInt(3, acc.getAccountNumber());
+                insertCustomerStatement.setLong(3, acc.getAccountNumber());
                 int rowsChanged = insertCustomerStatement.executeUpdate();
                 System.out.println("Customer " + name + " registered in db");
             }
@@ -157,13 +156,13 @@ public class ServerRemoteImpl extends UnicastRemoteObject
             while (customerIdRes.next()) {
                 id = customerIdRes.getInt(1);
             }
-            customerHash.put(id, new CustomerWrap(name, clientRemote));
-            rmistore.commons.interfaces.CustomerRemote client = new CustomerRemoteImpl(id, this);
-            clientRemote.receiveMessage("Welcome!");
-            return client;
+//            customerHash.put(id, new CustomerWrap(name, clientRemote));
+//            rmistore.commons.interfaces.CustomerRemote client = new CustomerRemoteImpl(id, this);
+//            clientRemote.receiveMessage("Welcome!");
+//            return client;
         } catch (SQLException sq) {
 
-            return null;
+//            return null;
         }
     }
 

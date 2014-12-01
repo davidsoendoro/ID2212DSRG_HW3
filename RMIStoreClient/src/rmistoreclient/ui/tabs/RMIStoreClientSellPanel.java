@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static javax.swing.JOptionPane.showMessageDialog;
+import rmistore.commons.exceptions.Rejected;
 import rmistore.commons.interfaces.Item;
 import rmistoreclient.helper.RMIStoreClientHelper;
 import rmistoreclient.interfaces.Callback;
@@ -49,6 +50,8 @@ public class RMIStoreClientSellPanel extends RMIStoreClientGenericTab implements
         jTextFieldItemPrice = new javax.swing.JTextField();
         jButtonAdd = new javax.swing.JButton();
         jLabelCurrency = new javax.swing.JLabel();
+        jLabelItemAmount = new javax.swing.JLabel();
+        jTextFieldItemAmount = new javax.swing.JTextField();
 
         jPanelItems.setLayout(new java.awt.GridLayout(0, 1));
         jScrollPaneItems.setViewportView(jPanelItems);
@@ -68,6 +71,8 @@ public class RMIStoreClientSellPanel extends RMIStoreClientGenericTab implements
 
         jLabelCurrency.setText("USD");
 
+        jLabelItemAmount.setText("Amount");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -76,24 +81,33 @@ public class RMIStoreClientSellPanel extends RMIStoreClientGenericTab implements
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPaneItems)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabelItemPrice)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jTextFieldItemPrice))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabelItemName)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextFieldItemName, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabelCurrency)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 61, Short.MAX_VALUE)
-                        .addComponent(jButtonAdd))
+                    .addComponent(jSeparator)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabelItems)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jSeparator))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(jLabelItemPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jTextFieldItemPrice))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(jLabelItemName, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jTextFieldItemName, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabelItemAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jTextFieldItemAmount)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabelCurrency)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(0, 75, Short.MAX_VALUE)
+                                .addComponent(jButtonAdd)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -102,13 +116,12 @@ public class RMIStoreClientSellPanel extends RMIStoreClientGenericTab implements
                 .addContainerGap()
                 .addComponent(jLabelItems)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPaneItems, javax.swing.GroupLayout.DEFAULT_SIZE, 182, Short.MAX_VALUE)
+                .addComponent(jScrollPaneItems, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButtonAdd, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabelItemName)
                             .addComponent(jTextFieldItemName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -116,7 +129,15 @@ public class RMIStoreClientSellPanel extends RMIStoreClientGenericTab implements
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabelItemPrice)
                             .addComponent(jTextFieldItemPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabelCurrency))))
+                            .addComponent(jLabelCurrency))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabelItemAmount)
+                            .addComponent(jTextFieldItemAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jButtonAdd)))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -130,7 +151,13 @@ public class RMIStoreClientSellPanel extends RMIStoreClientGenericTab implements
             Double.valueOf(jTextFieldItemPrice.getText());
         }
         catch (NumberFormatException ex) {
-            alert += "Put correct number format!";
+            alert += "Put correct number format on price!\n";
+        }
+        try {
+            Integer.valueOf(jTextFieldItemAmount.getText());
+        }
+        catch (NumberFormatException ex) {
+            alert += "Put correct number format on amount!\n";
         }
         if(alert.length() > 0) {
             showMessageDialog(null, alert);  
@@ -138,8 +165,9 @@ public class RMIStoreClientSellPanel extends RMIStoreClientGenericTab implements
         else {
             try {
                 RMIStoreClientHelper.customerRemoteObj.sellItem(jTextFieldItemName.getText(),
-                        Double.valueOf(jTextFieldItemPrice.getText()));
-            } catch (Exception ex) {
+                        Float.valueOf(jTextFieldItemPrice.getText()),
+                        Integer.valueOf(jTextFieldItemAmount.getText()));
+            } catch (NumberFormatException | Rejected | RemoteException ex) {
                 Logger.getLogger(RMIStoreClientSellPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
         }        
@@ -149,12 +177,14 @@ public class RMIStoreClientSellPanel extends RMIStoreClientGenericTab implements
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonAdd;
     private javax.swing.JLabel jLabelCurrency;
+    private javax.swing.JLabel jLabelItemAmount;
     private javax.swing.JLabel jLabelItemName;
     private javax.swing.JLabel jLabelItemPrice;
     private javax.swing.JLabel jLabelItems;
     private javax.swing.JPanel jPanelItems;
     private javax.swing.JScrollPane jScrollPaneItems;
     private javax.swing.JSeparator jSeparator;
+    private javax.swing.JTextField jTextFieldItemAmount;
     private javax.swing.JTextField jTextFieldItemName;
     private javax.swing.JTextField jTextFieldItemPrice;
     // End of variables declaration//GEN-END:variables
