@@ -185,11 +185,13 @@ public class ServerRemoteImpl extends UnicastRemoteObject
             //check username and password
             getCustomerPassStatement.setString(1, name);
             ResultSet rs = getCustomerPassStatement.executeQuery();
-            while (rs.next()) {
+            if(rs.next()){
                 if (!rs.getString("pass").equals(pass)) {
-                    throw new Rejected("Username or password is incorrect.");
+                    throw new Rejected("Password is incorrect.");
                 }
             }
+            else
+                throw new Rejected("User does not exist.");
             int id = 0;
             getCustomerIdStatement.setString(1, name);
             ResultSet customerIdRes = getCustomerIdStatement.executeQuery();
