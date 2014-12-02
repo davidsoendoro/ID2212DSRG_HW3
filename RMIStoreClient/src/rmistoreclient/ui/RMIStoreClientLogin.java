@@ -11,6 +11,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import rmistore.commons.exceptions.Rejected;
 import rmistore.commons.interfaces.Bank;
 import rmistore.commons.interfaces.ClientRemote;
@@ -181,7 +182,8 @@ public class RMIStoreClientLogin extends javax.swing.JFrame {
                     RMIStoreClientHelper.clientRemoteObj = new ClientRemoteImpl();
                     CustomerRemote customerRemote = 
                             rmistoreObj.login(jTextFieldUsername.getText(),
-                            new String(jPasswordField.getPassword()),
+                            RMIStoreClientHelper.doMd5(new String(
+                                jPasswordField.getPassword())),
                             RMIStoreClientHelper.clientRemoteObj);
                     RMIStoreClientHelper.customerRemoteObj = 
                             new CustomerRemoteThreadImpl(customerRemote);
@@ -198,7 +200,7 @@ public class RMIStoreClientLogin extends javax.swing.JFrame {
                     rmiStoreClientMain.setVisible(true);
                     RMIStoreClientLogin.this.setVisible(false);
                 } catch (RemoteException | Rejected | NotBoundException | MalformedURLException ex) {
-                    Logger.getLogger(RMIStoreClientLogin.class.getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(RMIStoreClientHelper.currentFrame, ex.getMessage());
                 }
             }
             

@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import rmistore.commons.exceptions.Rejected;
 import rmistore.commons.interfaces.Item;
+import rmistore.commons.interfaces.Transaction;
 import rmistoreclient.helper.RMIStoreClientHelper;
 
 /**
@@ -18,7 +19,7 @@ import rmistoreclient.helper.RMIStoreClientHelper;
  */
 public class RMIStoreClientTransactionItem extends javax.swing.JPanel {
 
-    private Item item;
+    private Transaction transaction;
     
     /**
      * Creates new form RMIStoreClientBuyItem
@@ -27,13 +28,13 @@ public class RMIStoreClientTransactionItem extends javax.swing.JPanel {
         initComponents();
     }
     
-    public RMIStoreClientTransactionItem(Item item) {
-        this.item = item;
+    public RMIStoreClientTransactionItem(Transaction transaction) {
+        this.transaction = transaction;
         
         initComponents();
         
-        jLabelName.setText(item.getName());
-        jLabelPrice.setText("$" + item.getPrice());
+        jLabelName.setText(transaction.getItemName());
+        jLabelPrice.setText("$" + transaction.getPrice());
     }
 
     /**
@@ -47,7 +48,6 @@ public class RMIStoreClientTransactionItem extends javax.swing.JPanel {
 
         jLabelName = new javax.swing.JLabel();
         jLabelPrice = new javax.swing.JLabel();
-        jLabelOther = new javax.swing.JLabel();
 
         setLayout(new java.awt.GridLayout(1, 0));
 
@@ -56,15 +56,11 @@ public class RMIStoreClientTransactionItem extends javax.swing.JPanel {
 
         jLabelPrice.setText("$0.00");
         add(jLabelPrice);
-
-        jLabelOther.setText("Seller / Buyer");
-        add(jLabelOther);
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabelName;
-    private javax.swing.JLabel jLabelOther;
     private javax.swing.JLabel jLabelPrice;
     // End of variables declaration//GEN-END:variables
 }

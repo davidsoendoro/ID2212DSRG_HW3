@@ -10,7 +10,9 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import rmistore.commons.exceptions.Rejected;
 import rmistore.commons.interfaces.Item;
+import rmistore.commons.interfaces.Transaction;
 import rmistoreclient.helper.RMIStoreClientHelper;
 import rmistoreclient.interfaces.Callback;
 import rmistoreclient.ui.tabs.items.RMIStoreClientTransactionItem;
@@ -114,18 +116,18 @@ public class RMIStoreClientHistoryPanel extends RMIStoreClientGenericTab impleme
     private javax.swing.JSeparator jSeparator2;
     // End of variables declaration//GEN-END:variables
 
-    public void refreshBalance() {
+    public void refreshHistory() {
         try {
             RMIStoreClientHelper.customerRemoteObj.callback = this;
-            RMIStoreClientHelper.accountObj.callback = this;
-            RMIStoreClientHelper.customerRemoteObj.checkBalance();
-        } catch (RemoteException ex) {
+            RMIStoreClientHelper.customerRemoteObj.getUserTransactions();
+        } catch (RemoteException | Rejected ex) {
             Logger.getLogger(RMIStoreClientHistoryPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     @Override
     public void doCallback(Object arguments) {
+        System.out.println(arguments.getClass());
         if(arguments != null && arguments.getClass() == Double.class) {
             DecimalFormat df = new DecimalFormat("#.00");
             jLabelBalanceValue.setText(" $" + df.format(arguments));
@@ -133,19 +135,26 @@ public class RMIStoreClientHistoryPanel extends RMIStoreClientGenericTab impleme
         else if(arguments != null && arguments.getClass() == String.class) {
             String argumentsString = (String) arguments;
             if(argumentsString.equals("deposit")) {
-                refreshBalance();
+                refreshHistory();
             }
             else if(argumentsString.equals("withdraw")) {
-                refreshBalance();
+                refreshHistory();
             }
         }
         else if(arguments != null && arguments.getClass() == ArrayList.class) {
-            ArrayList<Item> items = (ArrayList<Item>) arguments;
+            ArrayList<Transaction> transactions = (ArrayList<Transaction>) arguments;
             
             jPanelBuy.removeAll();
             jPanelSell.removeAll();
-            for(Item item : items) {
-                jPanelBuy.add(new RMIStoreClientTransactionItem(item));
+            System.out.println(transactions.size());
+            for(Transaction transaction : transactions) {
+                System.out.println(transaction.getItemName());
+                if(transaction.isIsBuy()) {
+                    jPanelBuy.add(new RMIStoreClientTransactionItem(transaction));                
+                }
+                else {
+                    jPanelSell.add(new RMIStoreClientTransactionItem(transaction));                
+                }
             }
             
             jPanelBuy.revalidate();

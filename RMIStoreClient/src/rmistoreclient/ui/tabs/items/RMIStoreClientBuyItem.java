@@ -34,6 +34,7 @@ public class RMIStoreClientBuyItem extends javax.swing.JPanel {
         initComponents();
         
         jLabelName.setText(item.getName() + " $" + item.getPrice());
+        jLabelQuantity.setText("" + item.getQuantity());
     }
 
     /**
@@ -47,6 +48,7 @@ public class RMIStoreClientBuyItem extends javax.swing.JPanel {
 
         jLabelName = new javax.swing.JLabel();
         jButtonBuy = new javax.swing.JButton();
+        jLabelQuantity = new javax.swing.JLabel();
         jLabelWishPrice = new javax.swing.JLabel();
         jTextFieldWishPrice = new javax.swing.JTextField();
         jButtonWish = new javax.swing.JButton();
@@ -64,6 +66,11 @@ public class RMIStoreClientBuyItem extends javax.swing.JPanel {
         });
         add(jButtonBuy);
 
+        jLabelQuantity.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabelQuantity.setText("0");
+        add(jLabelQuantity);
+
+        jLabelWishPrice.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabelWishPrice.setText("Wish Price");
         add(jLabelWishPrice);
         add(jTextFieldWishPrice);
@@ -111,6 +118,7 @@ public class RMIStoreClientBuyItem extends javax.swing.JPanel {
     private javax.swing.JButton jButtonBuy;
     private javax.swing.JButton jButtonWish;
     private javax.swing.JLabel jLabelName;
+    private javax.swing.JLabel jLabelQuantity;
     private javax.swing.JLabel jLabelWishPrice;
     private javax.swing.JTextField jTextFieldWishPrice;
     // End of variables declaration//GEN-END:variables

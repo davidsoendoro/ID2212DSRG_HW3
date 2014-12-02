@@ -151,15 +151,27 @@ public class RMIStoreClientRegister extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRegisterActionPerformed
-        if((new String(jPasswordField.getPassword())).equals(
+        String alert = "";
+        
+        if(!(new String(jPasswordField.getPassword())).equals(
                 new String(jPasswordFieldConfirmation.getPassword()))) {
+            alert += "Password and Confirmation "
+                    + "password mismatch! Please check!\n";
+        }
+        
+        if(new String(jPasswordField.getPassword()).length() < 8) {
+            alert += "Password needs to be at least 8 characters!";
+        }
+        
+        if(alert.length() <= 0) {
             jButtonRegister.setEnabled(false);
             jButtonLogin.setEnabled(false);
-            new RequestThread(jTextFieldUsername.getText(), new String(jPasswordField.getPassword())).start();
+            new RequestThread(jTextFieldUsername.getText(), 
+                    RMIStoreClientHelper.doMd5(new String(
+                            jPasswordField.getPassword()))).start();
         }   
         else {
-            showMessageDialog(RMIStoreClientRegister.this, "Password and Confirmation "
-                    + "password mismatch! Please check!");
+            showMessageDialog(RMIStoreClientRegister.this, alert);
         }
     }//GEN-LAST:event_jButtonRegisterActionPerformed
 

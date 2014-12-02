@@ -145,6 +145,9 @@ public class RMIStoreClientMain extends javax.swing.JFrame {
         else if(jTabbedPaneMain.getSelectedComponent() == accountTab) {
             accountTab.refreshBalance();
         }
+        else if(jTabbedPaneMain.getSelectedComponent() == historyTab) {
+            historyTab.refreshHistory();
+        }
     }//GEN-LAST:event_jTabbedPaneMainStateChanged
 
     private void jMenuLogoutMenuSelected(javax.swing.event.MenuEvent evt) {//GEN-FIRST:event_jMenuLogoutMenuSelected

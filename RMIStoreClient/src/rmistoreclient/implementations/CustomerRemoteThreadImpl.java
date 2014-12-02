@@ -13,6 +13,7 @@ import javax.swing.JProgressBar;
 import rmistore.commons.exceptions.Rejected;
 import rmistore.commons.interfaces.CustomerRemote;
 import rmistore.commons.interfaces.Item;
+import rmistore.commons.interfaces.Transaction;
 import rmistoreclient.helper.RMIStoreClientHelper;
 import rmistoreclient.interfaces.Callback;
 
@@ -219,5 +220,29 @@ public class CustomerRemoteThreadImpl implements CustomerRemote {
  
     public JProgressBar getLoader() {
         return this.jProgressBar;
+    }
+
+    @Override
+    public ArrayList<Transaction> getUserTransactions() throws Rejected, RemoteException {
+        if(!isCalling) {
+            new Thread() {
+
+                @Override
+                public void run() {
+                    try {
+                        RMIStoreClientHelper.customerRemoteObj.getLoader().setIndeterminate(true);
+                        isCalling = true;
+                        ArrayList<Transaction> returnItem = customerRemoteObj.getUserTransactions();
+                        callback.doCallback(returnItem);
+                        RMIStoreClientHelper.customerRemoteObj.getLoader().setIndeterminate(false);
+                    } catch (Rejected | RemoteException ex) {
+                        Logger.getLogger(CustomerRemoteThreadImpl.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    isCalling = false;
+                }
+
+            }.start();
+        }
+        return null;
     }
 }

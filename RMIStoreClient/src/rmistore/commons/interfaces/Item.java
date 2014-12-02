@@ -18,11 +18,12 @@ public class Item implements Serializable{
     double price;
     int quantity;
     
-    public Item(int itemId,int customerId,String name,double price){
+    public Item(int itemId,int customerId,String name,double price, int quantity){
         this.itemId=itemId;
         this.customerId=customerId;
         this.name=name;
-        this.price=price;      
+        this.price=price; 
+        this.quantity=quantity;
     }
     public int getCustomerId(){
         return customerId;

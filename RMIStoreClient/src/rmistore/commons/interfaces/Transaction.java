@@ -23,7 +23,7 @@ public class Transaction implements Serializable{
         this.isBuy=isBuy;
         
     }
-    
+
     public String getItemName() {
         return itemName;
     }
@@ -35,5 +35,5 @@ public class Transaction implements Serializable{
     public boolean isIsBuy() {
         return isBuy;
     }
-
+    
 }

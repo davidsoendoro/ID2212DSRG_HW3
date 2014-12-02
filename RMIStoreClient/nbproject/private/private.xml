@@ -2,18 +2,18 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="2">
         <file>
-            <url>src/rmistoreclient/ui/RMIStoreClientMain.java</url>
-            <bookmark id="2">
+            <url>src/rmistoreclient/ui/tabs/RMIStoreClientSellPanel.java</url>
+            <bookmark id="1">
                 <name/>
-                <line>33</line>
+                <line>142</line>
                 <key/>
             </bookmark>
         </file>
         <file>
-            <url>src/rmistoreclient/ui/tabs/RMIStoreClientSellPanel.java</url>
-            <bookmark id="1">
+            <url>src/rmistoreclient/ui/RMIStoreClientMain.java</url>
+            <bookmark id="2">
                 <name/>
-                <line>124</line>
+                <line>36</line>
                 <key/>
             </bookmark>
         </file>
@@ -21,12 +21,14 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group/>
         <group name="ID2212DSRG_HW2"/>
-<<<<<<< Updated upstream
-        <group name="ID2212DSRG_HW3"/>
-=======
         <group name="ID2212DSRG_HW3">
-            <file>file:/Users/rohitgoyal/Documents/ID2212DSRG_HW3/RMIStoreClient/src/rmistoreclient/ui/RMIStoreClientRegister.java</file>
+            <file>file:/C:/Users/CynthiaJuwita/Documents/GitHub/ID2212DSRG_HW3/RMIStoreClient/src/rmistoreclient/ui/tabs/items/RMIStoreClientBuyItem.java</file>
+            <file>file:/C:/Users/CynthiaJuwita/Documents/GitHub/ID2212DSRG_HW3/RMIStoreClient/src/rmistoreclient/ui/RMIStoreClientRegister.java</file>
+            <file>file:/C:/Users/CynthiaJuwita/Documents/GitHub/ID2212DSRG_HW3/RMIStoreClient/src/rmistoreclient/ui/tabs/RMIStoreClientHistoryPanel.java</file>
+            <file>file:/C:/Users/CynthiaJuwita/Documents/GitHub/ID2212DSRG_HW3/RMIStoreClient/src/rmistore/commons/interfaces/CustomerRemote.java</file>
+            <file>file:/C:/Users/CynthiaJuwita/Documents/GitHub/ID2212DSRG_HW3/RMIStoreClient/src/rmistoreclient/ui/RMIStoreClientLogin.java</file>
+            <file>file:/C:/Users/CynthiaJuwita/Documents/GitHub/ID2212DSRG_HW3/RMIStoreClient/src/rmistoreclient/ui/tabs/RMIStoreClientBuyPanel.java</file>
+            <file>file:/C:/Users/CynthiaJuwita/Documents/GitHub/ID2212DSRG_HW3/RMIStoreClient/src/rmistoreclient/ui/RMIStoreClientMain.java</file>
         </group>
->>>>>>> Stashed changes
     </open-files>
 </project-private>

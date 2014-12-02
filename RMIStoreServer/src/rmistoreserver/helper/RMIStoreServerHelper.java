@@ -65,5 +65,5 @@ public class RMIStoreServerHelper {
             + "(START WITH 1, INCREMENT BY 1), customer_id INTEGER NOT NULL, "
             + "item_name VARCHAR(128), item_price FLOAT, isBuy BOOLEAN)";
     public static final String INSERT_IN_TRANSACTION_TABLE="INSERT INTO "+rmistoreserver.helper.RMIStoreServerHelper.TABLE_TRANSACTION + " (customer_id, item_name, item_price, isBuy) VALUES (?, ?, ?,?)";
-    public static final String RETRIEVE_TRANS="SELECT * FROM "+ rmistoreserver.helper.RMIStoreServerHelper.TABLE_TRANSACTION + " WHERE id = ?";
+    public static final String RETRIEVE_TRANS="SELECT * FROM "+ rmistoreserver.helper.RMIStoreServerHelper.TABLE_TRANSACTION + " WHERE CUSTOMER_ID = ?";
 }
