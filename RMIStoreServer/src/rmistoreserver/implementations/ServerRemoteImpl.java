@@ -5,8 +5,11 @@
  */
 package rmistoreserver.implementations;
 
+import java.math.BigInteger;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -26,6 +29,7 @@ import rmistore.commons.interfaces.Item;
 import rmistoreserver.CustomerWrap;
 import rmistoreserver.Wish;
 import rmistore.commons.interfaces.Bank;
+import rmistore.commons.interfaces.Transaction;
 
 /**
  *
@@ -51,6 +55,8 @@ public class ServerRemoteImpl extends UnicastRemoteObject
     private PreparedStatement removeItemStatement;
     private PreparedStatement insertWishStatement;
     private PreparedStatement retrieveWisherStatement;
+    private PreparedStatement insertTransStatement;
+    private PreparedStatement retrieveTransStatement;
 
     private Map<String, Account> accounts = new HashMap<>();
 
@@ -127,7 +133,8 @@ public class ServerRemoteImpl extends UnicastRemoteObject
         removeItemStatement = connection.prepareStatement(rmistoreserver.helper.RMIStoreServerHelper.REMOVE_ITEM);
         insertWishStatement = connection.prepareStatement(rmistoreserver.helper.RMIStoreServerHelper.INSERT_IN_WISH_TABLE);
         retrieveWisherStatement = connection.prepareStatement(rmistoreserver.helper.RMIStoreServerHelper.RETRIEVE_WISH);
-
+        insertTransStatement = connection.prepareStatement(rmistoreserver.helper.RMIStoreServerHelper.INSERT_IN_TRANSACTION_TABLE);
+        retrieveTransStatement = connection.prepareStatement(rmistoreserver.helper.RMIStoreServerHelper.RETRIEVE_TRANS);
     }
 
     @Override
@@ -145,7 +152,7 @@ public class ServerRemoteImpl extends UnicastRemoteObject
                 Account acc = bankRMIObj.newAccount(name);
                 //insert customer in DB
                 insertCustomerStatement.setString(1, name);
-                insertCustomerStatement.setString(2, pass);
+                insertCustomerStatement.setString(2, doMd5(pass));
                 insertCustomerStatement.setLong(3, acc.getAccountNumber());
                 int rowsChanged = insertCustomerStatement.executeUpdate();
                 System.out.println("Customer " + name + " registered in db");
@@ -261,6 +268,7 @@ public class ServerRemoteImpl extends UnicastRemoteObject
             // the thread function requires these variable to be 'final' :(
             final int seller = seller_id;
             final String name_of_item = itemName;
+            final float price = itemPrice;
             if (bankRMIObj.getAccount(customerHash.get(customerId).getName()).getBalance() >= itemPrice) {
                 //final Item item = itemHash.get(itemId);
                 buyItemStatement.setInt(1, itemId);
@@ -273,6 +281,7 @@ public class ServerRemoteImpl extends UnicastRemoteObject
                     public void run() {
 
                         try {
+
                             ServerRemoteImpl.this.getClientObj(seller).receiveMessage("Your item " + name_of_item + " sold. Money credited to your account.");
                         } catch (RemoteException ex) {
                             Logger.getLogger(ServerRemoteImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -282,11 +291,21 @@ public class ServerRemoteImpl extends UnicastRemoteObject
                 };
                 sellNotificationThread.start();
                 try {
+                    insertTransStatement.setInt(1, seller);
+                    insertTransStatement.setString(2, name_of_item);
+                    insertTransStatement.setFloat(3, price);
+                    insertTransStatement.setBoolean(4, false);
+                    insertTransStatement.executeUpdate();
                     bankRMIObj.getAccount(customerHash.get(seller_id).getName()).deposit(itemPrice);
                 } catch (Rejected r) {
                     this.getClientObj(seller_id).receiveMessage("Exception: " + r);
                 }
                 try {
+                    insertTransStatement.setInt(1, customerId);
+                    insertTransStatement.setString(2, name_of_item);
+                    insertTransStatement.setFloat(3, price);
+                    insertTransStatement.setBoolean(4, true);
+                    insertTransStatement.executeUpdate();
                     bankRMIObj.getAccount(customerHash.get(customerId).getName()).withdraw(itemPrice);
                 } catch (Rejected r) {
                     this.getClientObj(customerId).receiveMessage("Exception: " + r);
@@ -313,7 +332,7 @@ public class ServerRemoteImpl extends UnicastRemoteObject
             getUserItemsStatement.setInt(1, customerId);
             ResultSet rs = getUserItemsStatement.executeQuery();
             while (rs.next()) {
-                Item i = new Item(rs.getInt("id"), rs.getInt("seller_id"), rs.getString("name"), rs.getFloat("price"));
+                Item i = new Item(rs.getInt("id"), rs.getInt("seller_id"), rs.getString("name"), rs.getFloat("price"), rs.getInt("quantity"));
                 items.add(i);
             }
             return items;
@@ -328,7 +347,7 @@ public class ServerRemoteImpl extends UnicastRemoteObject
             ArrayList<Item> items = new ArrayList<>();
             ResultSet rs = getUserItemsStatement.executeQuery();
             while (rs.next()) {
-                Item i = new Item(rs.getInt("id"), rs.getInt("seller_id"), rs.getString("name"), rs.getFloat("price"));
+                Item i = new Item(rs.getInt("id"), rs.getInt("seller_id"), rs.getString("name"), rs.getFloat("price"), rs.getInt("quantity"));
                 items.add(i);
             }
             return items;
@@ -363,7 +382,7 @@ public class ServerRemoteImpl extends UnicastRemoteObject
             getOtherItemsStatement.setInt(1, customerId);
             ResultSet rs = getUserItemsStatement.executeQuery();
             while (rs.next()) {
-                Item i = new Item(rs.getInt("id"), rs.getInt("seller_id"), rs.getString("name"), rs.getFloat("price"));
+                Item i = new Item(rs.getInt("id"), rs.getInt("seller_id"), rs.getString("name"), rs.getFloat("price"), rs.getInt("quantity"));
                 items.add(i);
             }
             return items;
@@ -408,4 +427,45 @@ public class ServerRemoteImpl extends UnicastRemoteObject
         }
 
     }
+
+    public static String doMd5(String input) {
+
+        String md5 = null;
+
+        if (null == input) {
+            return null;
+        }
+
+        try {
+
+            //Create MessageDigest object for MD5
+            MessageDigest digest = MessageDigest.getInstance("MD5");
+
+            //Update input string in message digest
+            digest.update(input.getBytes(), 0, input.length());
+
+            //Converts message digest value in base 16 (hex) 
+            md5 = new BigInteger(1, digest.digest()).toString(16);
+
+        } catch (NoSuchAlgorithmException e) {
+
+            e.printStackTrace();
+        }
+        return md5;
+    }
+
+    ArrayList <Transaction> retrieveUserTransaction(int customerId){
+        try {
+            ArrayList<Transaction> trans=new ArrayList<>();
+            retrieveTransStatement.setInt(1, customerId);
+            ResultSet rs= retrieveTransStatement.executeQuery();
+            while(rs.next()){
+                trans.add(new Transaction(rs.getString("item_name"), rs.getFloat("item_price"), rs.getBoolean("isBuy")));
+            }
+            return trans;
+        } catch (SQLException ex) {
+            Logger.getLogger(ServerRemoteImpl.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    } 
 }

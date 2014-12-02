@@ -20,5 +20,6 @@ public interface CustomerRemote extends Remote{
     public ArrayList<Item> getUserItems()throws rmistore.commons.exceptions.Rejected,RemoteException;
     public ArrayList<Item> getOtherItems()throws rmistore.commons.exceptions.Rejected,RemoteException;
     public double checkBalance() throws RemoteException;
+    public ArrayList<Transaction> getUserTransactions() throws rmistore.commons.exceptions.Rejected,RemoteException;
     public boolean unRegister()throws rmistore.commons.exceptions.Rejected,RemoteException;
 }

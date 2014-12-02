@@ -10,6 +10,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import rmistore.commons.exceptions.Rejected;
 import rmistore.commons.interfaces.Item;
+import rmistore.commons.interfaces.Transaction;
 /**
  *
  * @author davidsoendoro
@@ -71,5 +72,12 @@ implements rmistore.commons.interfaces.CustomerRemote {
     @Override
     public double checkBalance(){
         return this.serverRemoteObj.checkCustomerBalance(myId);
+    }
+    
+    
+    @Override
+    public ArrayList<Transaction> getUserTransactions() throws Rejected, RemoteException {
+         //To change body of generated methods, choose Tools | Templates.
+        return this.serverRemoteObj.retrieveUserTransaction(myId);
     }
 }
