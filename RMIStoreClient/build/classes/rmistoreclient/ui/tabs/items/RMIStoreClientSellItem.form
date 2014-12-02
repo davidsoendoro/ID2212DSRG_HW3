@@ -29,6 +29,11 @@
         <Property name="text" type="java.lang.String" value="$0.00"/>
       </Properties>
     </Component>
+    <Component class="javax.swing.JLabel" name="jLabelAmount">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="0"/>
+      </Properties>
+    </Component>
     <Component class="javax.swing.JButton" name="jButtonRemove">
       <Properties>
         <Property name="text" type="java.lang.String" value="Remove"/>

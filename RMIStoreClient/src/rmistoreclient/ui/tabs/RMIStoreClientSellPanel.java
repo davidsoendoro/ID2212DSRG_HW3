@@ -205,7 +205,9 @@ public class RMIStoreClientSellPanel extends RMIStoreClientGenericTab implements
             
             jPanelItems.removeAll();
             for(Item item : items) {
-                jPanelItems.add(new RMIStoreClientSellItem(item));
+                if(item.getQuantity() > 0){
+                    jPanelItems.add(new RMIStoreClientSellItem(item));                    
+                }
             }
             
             jPanelItems.revalidate();

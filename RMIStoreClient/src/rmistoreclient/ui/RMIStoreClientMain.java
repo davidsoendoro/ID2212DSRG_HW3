@@ -10,6 +10,7 @@ import rmistoreclient.helper.RMIStoreClientHelper;
 import rmistoreclient.implementations.ClientRemoteImpl;
 import rmistoreclient.ui.tabs.RMIStoreClientAccountPanel;
 import rmistoreclient.ui.tabs.RMIStoreClientBuyPanel;
+import rmistoreclient.ui.tabs.RMIStoreClientHistoryPanel;
 import rmistoreclient.ui.tabs.RMIStoreClientSellPanel;
 
 /**
@@ -24,6 +25,7 @@ public class RMIStoreClientMain extends javax.swing.JFrame {
     private RMIStoreClientBuyPanel buyTab;
     private RMIStoreClientSellPanel sellTab;
     private RMIStoreClientAccountPanel accountTab;
+    private RMIStoreClientHistoryPanel historyTab;
     
     /**
      * Creates new form RMIStoreClientMain
@@ -225,6 +227,10 @@ public class RMIStoreClientMain extends javax.swing.JFrame {
         // Init account tab
         accountTab = new RMIStoreClientAccountPanel();
         jTabbedPaneMain.add(RMIStoreClientAccountPanel.tabName, accountTab);
+        
+        // Init history tab
+        historyTab = new RMIStoreClientHistoryPanel();
+        jTabbedPaneMain.add(RMIStoreClientHistoryPanel.tabName, historyTab);
         
         ClientRemoteImpl clientRemoteImpl = (ClientRemoteImpl) 
                 RMIStoreClientHelper.clientRemoteObj;

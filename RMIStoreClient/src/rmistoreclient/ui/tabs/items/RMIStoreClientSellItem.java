@@ -34,6 +34,7 @@ public class RMIStoreClientSellItem extends javax.swing.JPanel {
         
         jLabelName.setText(item.getName());
         jLabelPrice.setText("$" + item.getPrice());
+        jLabelAmount.setText("" + item.getQuantity());
     }
 
     /**
@@ -47,6 +48,7 @@ public class RMIStoreClientSellItem extends javax.swing.JPanel {
 
         jLabelName = new javax.swing.JLabel();
         jLabelPrice = new javax.swing.JLabel();
+        jLabelAmount = new javax.swing.JLabel();
         jButtonRemove = new javax.swing.JButton();
 
         setLayout(new java.awt.GridLayout(1, 0));
@@ -56,6 +58,9 @@ public class RMIStoreClientSellItem extends javax.swing.JPanel {
 
         jLabelPrice.setText("$0.00");
         add(jLabelPrice);
+
+        jLabelAmount.setText("0");
+        add(jLabelAmount);
 
         jButtonRemove.setText("Remove");
         jButtonRemove.addActionListener(new java.awt.event.ActionListener() {
@@ -77,6 +82,7 @@ public class RMIStoreClientSellItem extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonRemove;
+    private javax.swing.JLabel jLabelAmount;
     private javax.swing.JLabel jLabelName;
     private javax.swing.JLabel jLabelPrice;
     // End of variables declaration//GEN-END:variables

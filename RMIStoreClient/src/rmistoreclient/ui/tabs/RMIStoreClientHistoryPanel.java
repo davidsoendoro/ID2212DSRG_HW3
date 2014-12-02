@@ -25,7 +25,7 @@ public class RMIStoreClientHistoryPanel extends RMIStoreClientGenericTab impleme
      * Creates new form RMIStoreClientBuyPanel
      */
     public RMIStoreClientHistoryPanel() {
-        tabName = "Account";
+        tabName = "Transaction";
         
         initComponents();
     }

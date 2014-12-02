@@ -16,6 +16,8 @@ public class Item implements Serializable{
     int customerId;
     String name;
     double price;
+    int quantity;
+    
     public Item(int itemId,int customerId,String name,double price){
         this.itemId=itemId;
         this.customerId=customerId;
@@ -35,6 +37,10 @@ public class Item implements Serializable{
     }
     public int getItemId(){
         return itemId;
+    }
+
+    public int getQuantity() {
+        return quantity;
     }
     
 }
