@@ -382,7 +382,7 @@ public class ServerRemoteImpl extends UnicastRemoteObject
         try {
             ArrayList<Item> items = new ArrayList<>();
             getOtherItemsStatement.setInt(1, customerId);
-            ResultSet rs = getUserItemsStatement.executeQuery();
+            ResultSet rs = getOtherItemsStatement.executeQuery();
             while (rs.next()) {
                 Item i = new Item(rs.getInt("id"), rs.getInt("seller_id"), rs.getString("name"), rs.getFloat("price"), rs.getInt("quantity"));
                 items.add(i);
