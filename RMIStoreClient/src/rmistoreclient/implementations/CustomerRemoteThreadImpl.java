@@ -93,7 +93,7 @@ public class CustomerRemoteThreadImpl implements CustomerRemote {
                         RMIStoreClientHelper.customerRemoteObj.getLoader().setIndeterminate(true);
                         isCalling = true;
                         customerRemoteObj.buyItem(itemId);
-                        callback.doCallback(null);
+                        callback.doCallback("buyItem");
                         RMIStoreClientHelper.customerRemoteObj.getLoader().setIndeterminate(false);
                     } catch (Rejected ex) {
                         Logger.getLogger(CustomerRemoteThreadImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -134,53 +134,45 @@ public class CustomerRemoteThreadImpl implements CustomerRemote {
 
     @Override
     public ArrayList<Item> getOtherItems() throws Rejected, RemoteException {
-        if(!isCalling) {
-            new Thread() {
+        new Thread() {
 
-                @Override
-                public void run() {
-                    try {
-                        RMIStoreClientHelper.customerRemoteObj.getLoader().setIndeterminate(true);
-                        isCalling = true;
-                        ArrayList<Item> returnItem = customerRemoteObj.getOtherItems();
-                        callback.doCallback(returnItem);
-                        RMIStoreClientHelper.customerRemoteObj.getLoader().setIndeterminate(false);
-                    } catch (Rejected ex) {
-                        Logger.getLogger(CustomerRemoteThreadImpl.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (RemoteException ex) {
-                        RMIStoreClientHelper.forceLogout();
-                    }
-                    isCalling = false;
+            @Override
+            public void run() {
+                try {
+                    RMIStoreClientHelper.customerRemoteObj.getLoader().setIndeterminate(true);
+                    ArrayList<Item> returnItem = customerRemoteObj.getOtherItems();
+                    callback.doCallback(returnItem);
+                    RMIStoreClientHelper.customerRemoteObj.getLoader().setIndeterminate(false);
+                } catch (Rejected ex) {
+                    Logger.getLogger(CustomerRemoteThreadImpl.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (RemoteException ex) {
+                    RMIStoreClientHelper.forceLogout();
                 }
+            }
 
-            }.start();
-        }
+        }.start();
         return null;
     }
 
     @Override
     public ArrayList<Item> getUserItems() throws Rejected, RemoteException {
-        if(!isCalling) {
-            new Thread() {
+        new Thread() {
 
-                @Override
-                public void run() {
-                    try {
-                        RMIStoreClientHelper.customerRemoteObj.getLoader().setIndeterminate(true);
-                        isCalling = true;
-                        ArrayList<Item> returnItem = customerRemoteObj.getUserItems();
-                        callback.doCallback(returnItem);
-                        RMIStoreClientHelper.customerRemoteObj.getLoader().setIndeterminate(false);
-                    } catch (Rejected ex) {
-                        Logger.getLogger(CustomerRemoteThreadImpl.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (RemoteException ex) {
-                        RMIStoreClientHelper.forceLogout();
-                    }
-                    isCalling = false;
+            @Override
+            public void run() {
+                try {
+                    RMIStoreClientHelper.customerRemoteObj.getLoader().setIndeterminate(true);
+                    ArrayList<Item> returnItem = customerRemoteObj.getUserItems();
+                    callback.doCallback(returnItem);
+                    RMIStoreClientHelper.customerRemoteObj.getLoader().setIndeterminate(false);
+                } catch (Rejected ex) {
+                    Logger.getLogger(CustomerRemoteThreadImpl.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (RemoteException ex) {
+                    RMIStoreClientHelper.forceLogout();
                 }
+            }
 
-            }.start();
-        }
+        }.start();
         return null;
     }
 

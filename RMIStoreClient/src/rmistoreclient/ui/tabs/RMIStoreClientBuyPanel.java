@@ -82,6 +82,12 @@ public class RMIStoreClientBuyPanel extends RMIStoreClientGenericTab implements 
             jPanelBuy.revalidate();
             jPanelBuy.repaint();
         }
+        else if(arguments != null && arguments.getClass() == String.class) {
+            String argumentsString = (String) arguments;
+            if(argumentsString.equals("buyItem")) {
+                refreshItemList();
+            }
+        }
     }
 
     public void refreshItemList() {

@@ -5,7 +5,11 @@
  */
 package rmistoreclient.ui;
 
+import java.rmi.RemoteException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import rmistore.commons.exceptions.Rejected;
 import rmistoreclient.helper.RMIStoreClientHelper;
 import rmistoreclient.implementations.ClientRemoteImpl;
 import rmistoreclient.ui.tabs.RMIStoreClientAccountPanel;
@@ -64,6 +68,7 @@ public class RMIStoreClientMain extends javax.swing.JFrame {
         jMenuAbout = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(1024, 800));
 
         jTabbedPaneMain.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -76,24 +81,24 @@ public class RMIStoreClientMain extends javax.swing.JFrame {
 
         jMenuLogout.setText("Logout");
         jMenuLogout.addMenuListener(new javax.swing.event.MenuListener() {
-            public void menuSelected(javax.swing.event.MenuEvent evt) {
-                jMenuLogoutMenuSelected(evt);
+            public void menuCanceled(javax.swing.event.MenuEvent evt) {
             }
             public void menuDeselected(javax.swing.event.MenuEvent evt) {
             }
-            public void menuCanceled(javax.swing.event.MenuEvent evt) {
+            public void menuSelected(javax.swing.event.MenuEvent evt) {
+                jMenuLogoutMenuSelected(evt);
             }
         });
         jMenuBar.add(jMenuLogout);
 
         jMenuAbout.setText("About");
         jMenuAbout.addMenuListener(new javax.swing.event.MenuListener() {
-            public void menuSelected(javax.swing.event.MenuEvent evt) {
-                jMenuAboutMenuSelected(evt);
+            public void menuCanceled(javax.swing.event.MenuEvent evt) {
             }
             public void menuDeselected(javax.swing.event.MenuEvent evt) {
             }
-            public void menuCanceled(javax.swing.event.MenuEvent evt) {
+            public void menuSelected(javax.swing.event.MenuEvent evt) {
+                jMenuAboutMenuSelected(evt);
             }
         });
         jMenuBar.add(jMenuAbout);
@@ -150,14 +155,20 @@ public class RMIStoreClientMain extends javax.swing.JFrame {
     }//GEN-LAST:event_jTabbedPaneMainStateChanged
 
     private void jMenuLogoutMenuSelected(javax.swing.event.MenuEvent evt) {//GEN-FIRST:event_jMenuLogoutMenuSelected
-        // Send Logout message:
-        
-        // If logout success send this:
-        this.setVisible(false);
-        caller.setVisible(true);
-        
-        // If logout failed send this:
+        try {
+            // Send Logout message:
+            RMIStoreClientHelper.clientRemoteObj = null;
+            RMIStoreClientHelper.customerRemoteObj.unRegister();
+            
+            // If logout success send this:
+            this.setVisible(false);
+            caller.setVisible(true);
+            
+            // If logout failed send this:
 //        JOptionPane.showMessageDialog(RMIStoreClientMain.this, "???");
+        } catch (Rejected | RemoteException ex) {
+            Logger.getLogger(RMIStoreClientMain.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jMenuLogoutMenuSelected
 
     private void jMenuAboutMenuSelected(javax.swing.event.MenuEvent evt) {//GEN-FIRST:event_jMenuAboutMenuSelected

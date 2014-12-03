@@ -201,8 +201,37 @@ public class RMIStoreClientLogin extends javax.swing.JFrame {
                                     jTextFieldUsername.getText());
                     rmiStoreClientMain.setVisible(true);
                     RMIStoreClientLogin.this.setVisible(false);
-                } catch (RemoteException | Rejected | NotBoundException | MalformedURLException ex) {
+                } catch (Rejected | NotBoundException | MalformedURLException ex) {
                     JOptionPane.showMessageDialog(RMIStoreClientHelper.currentFrame, ex.getMessage());
+                } catch (RemoteException ex) {
+                    try {
+                        rmistoreObj = (ServerRemote)Naming.lookup(
+                                RMIStoreClientHelper.RMIStoreName);
+                        RMIStoreClientHelper.currentFrame = RMIStoreClientLogin.this;
+                        RMIStoreClientHelper.clientRemoteObj = new ClientRemoteImpl();
+                        CustomerRemote customerRemote = 
+                                rmistoreObj.login(jTextFieldUsername.getText(),
+                                RMIStoreClientHelper.doMd5(new String(
+                                    jPasswordField.getPassword())),
+                                RMIStoreClientHelper.clientRemoteObj);
+                        RMIStoreClientHelper.customerRemoteObj = 
+                                new CustomerRemoteThreadImpl(customerRemote);
+
+                        // Connect to Bank
+                        Bank rmiBankObj = (Bank)Naming.lookup(
+                                RMIStoreClientHelper.RMIBankName);
+                        RMIStoreClientHelper.accountObj = new AccountThreadImpl(
+                                rmiBankObj.getAccount(jTextFieldUsername.getText()));
+
+                        RMIStoreClientMain rmiStoreClientMain = 
+                                new RMIStoreClientMain(RMIStoreClientLogin.this, 
+                                        jTextFieldUsername.getText());
+                        rmiStoreClientMain.setVisible(true);
+                        RMIStoreClientLogin.this.setVisible(false);
+                    } catch (NotBoundException | MalformedURLException | RemoteException | Rejected ex1) {
+                        Logger.getLogger(RMIStoreClientLogin.class.getName()).log(Level.SEVERE, null, ex1);
+                    }
+
                 }
             }
             

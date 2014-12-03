@@ -6,6 +6,7 @@
 package rmistoreclient.ui.tabs.items;
 
 import java.rmi.RemoteException;
+import java.text.DecimalFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static javax.swing.JOptionPane.showMessageDialog;
@@ -33,7 +34,9 @@ public class RMIStoreClientBuyItem extends javax.swing.JPanel {
         
         initComponents();
         
-        jLabelName.setText(item.getName() + " $" + item.getPrice());
+        DecimalFormat df = new DecimalFormat("#.00");
+        jLabelName.setText(item.getName());
+        jLabelPrice.setText(" $" + df.format(item.getPrice()));
         jLabelQuantity.setText("" + item.getQuantity());
     }
 
@@ -47,6 +50,7 @@ public class RMIStoreClientBuyItem extends javax.swing.JPanel {
     private void initComponents() {
 
         jLabelName = new javax.swing.JLabel();
+        jLabelPrice = new javax.swing.JLabel();
         jButtonBuy = new javax.swing.JButton();
         jLabelQuantity = new javax.swing.JLabel();
         jLabelWishPrice = new javax.swing.JLabel();
@@ -57,6 +61,9 @@ public class RMIStoreClientBuyItem extends javax.swing.JPanel {
 
         jLabelName.setText("Name");
         add(jLabelName);
+
+        jLabelPrice.setText("$0.0");
+        add(jLabelPrice);
 
         jButtonBuy.setText("Buy");
         jButtonBuy.addActionListener(new java.awt.event.ActionListener() {
@@ -118,6 +125,7 @@ public class RMIStoreClientBuyItem extends javax.swing.JPanel {
     private javax.swing.JButton jButtonBuy;
     private javax.swing.JButton jButtonWish;
     private javax.swing.JLabel jLabelName;
+    private javax.swing.JLabel jLabelPrice;
     private javax.swing.JLabel jLabelQuantity;
     private javax.swing.JLabel jLabelWishPrice;
     private javax.swing.JTextField jTextFieldWishPrice;

@@ -33,15 +33,25 @@ implements rmistore.commons.interfaces.ClientRemote {
 
     @Override
     public boolean receiveMessage(String message) throws RemoteException {
-        JOptionPane.showMessageDialog(RMIStoreClientHelper.currentFrame, message);
-        System.out.println(message);
+        if(RMIStoreClientHelper.clientRemoteObj != null) {
+            JOptionPane.showMessageDialog(RMIStoreClientHelper.currentFrame, message);
+            System.out.println(message);            
+        }
+        else {
+            throw new RemoteException("Client is disconnected");
+        }
         
         return true;
     }
 
     @Override
     public void updateBalance(double balance) throws RemoteException {
-        balanceDisplayer.displayBalance(balance);
+        if(RMIStoreClientHelper.clientRemoteObj != null) {
+            balanceDisplayer.displayBalance(balance);
+        }
+        else {
+            throw new RemoteException("Client is disconnected");
+        }
     }
     
 }
