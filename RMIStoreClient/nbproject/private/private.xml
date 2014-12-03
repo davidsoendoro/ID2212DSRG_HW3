@@ -2,18 +2,18 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="2">
         <file>
-            <url>src/rmistoreclient/ui/tabs/RMIStoreClientSellPanel.java</url>
-            <bookmark id="1">
+            <url>src/rmistoreclient/ui/RMIStoreClientMain.java</url>
+            <bookmark id="2">
                 <name/>
-                <line>142</line>
+                <line>35</line>
                 <key/>
             </bookmark>
         </file>
         <file>
-            <url>src/rmistoreclient/ui/RMIStoreClientMain.java</url>
-            <bookmark id="2">
+            <url>src/rmistoreclient/ui/tabs/RMIStoreClientSellPanel.java</url>
+            <bookmark id="1">
                 <name/>
-                <line>36</line>
+                <line>142</line>
                 <key/>
             </bookmark>
         </file>
@@ -24,11 +24,12 @@
         <group name="ID2212DSRG_HW3">
             <file>file:/C:/Users/CynthiaJuwita/Documents/GitHub/ID2212DSRG_HW3/RMIStoreClient/src/rmistoreclient/ui/tabs/items/RMIStoreClientBuyItem.java</file>
             <file>file:/C:/Users/CynthiaJuwita/Documents/GitHub/ID2212DSRG_HW3/RMIStoreClient/src/rmistoreclient/ui/RMIStoreClientRegister.java</file>
+            <file>file:/C:/Users/CynthiaJuwita/Documents/GitHub/ID2212DSRG_HW3/RMIStoreClient/src/rmistoreclient/ui/tabs/RMIStoreClientAccountPanel.java</file>
+            <file>file:/C:/Users/CynthiaJuwita/Documents/GitHub/ID2212DSRG_HW3/RMIStoreClient/src/rmistoreclient/helper/RMIStoreClientHelper.java</file>
             <file>file:/C:/Users/CynthiaJuwita/Documents/GitHub/ID2212DSRG_HW3/RMIStoreClient/src/rmistoreclient/ui/tabs/RMIStoreClientHistoryPanel.java</file>
             <file>file:/C:/Users/CynthiaJuwita/Documents/GitHub/ID2212DSRG_HW3/RMIStoreClient/src/rmistore/commons/interfaces/CustomerRemote.java</file>
             <file>file:/C:/Users/CynthiaJuwita/Documents/GitHub/ID2212DSRG_HW3/RMIStoreClient/src/rmistoreclient/ui/RMIStoreClientLogin.java</file>
             <file>file:/C:/Users/CynthiaJuwita/Documents/GitHub/ID2212DSRG_HW3/RMIStoreClient/src/rmistoreclient/ui/tabs/RMIStoreClientBuyPanel.java</file>
-            <file>file:/C:/Users/CynthiaJuwita/Documents/GitHub/ID2212DSRG_HW3/RMIStoreClient/src/rmistoreclient/ui/RMIStoreClientMain.java</file>
         </group>
     </open-files>
 </project-private>

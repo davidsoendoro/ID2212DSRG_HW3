@@ -53,10 +53,10 @@ public class RMIStoreClientHistoryPanel extends RMIStoreClientGenericTab impleme
 
         jLabelBalance.setText("Buy Transactions");
 
-        jPanelBuy.setLayout(new java.awt.GridLayout());
+        jPanelBuy.setLayout(new java.awt.GridLayout(0, 1));
         jScrollPaneBuy.setViewportView(jPanelBuy);
 
-        jPanelSell.setLayout(new java.awt.GridLayout());
+        jPanelSell.setLayout(new java.awt.GridLayout(0, 1));
         jScrollPaneSell.setViewportView(jPanelSell);
 
         jLabelSellTransactions.setText("Sell Transactions");
@@ -146,9 +146,7 @@ public class RMIStoreClientHistoryPanel extends RMIStoreClientGenericTab impleme
             
             jPanelBuy.removeAll();
             jPanelSell.removeAll();
-            System.out.println(transactions.size());
             for(Transaction transaction : transactions) {
-                System.out.println(transaction.getItemName());
                 if(transaction.isIsBuy()) {
                     jPanelBuy.add(new RMIStoreClientTransactionItem(transaction));                
                 }

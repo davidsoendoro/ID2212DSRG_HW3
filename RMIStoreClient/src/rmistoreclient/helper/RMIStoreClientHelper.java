@@ -9,6 +9,7 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import rmistore.commons.interfaces.ClientRemote;
 import rmistoreclient.implementations.AccountThreadImpl;
 import rmistoreclient.implementations.CustomerRemoteThreadImpl;
@@ -33,6 +34,7 @@ public class RMIStoreClientHelper {
     public static ClientRemote clientRemoteObj;
     public static AccountThreadImpl accountObj;
     public static JFrame currentFrame;
+    public static JFrame initialFrame;
     
     public static String doMd5(String input) {
 
@@ -58,4 +60,12 @@ public class RMIStoreClientHelper {
         return md5;
     }
 
+    public static void forceLogout() {
+        JOptionPane.showMessageDialog(currentFrame, "Connection error! Forced logout!");
+        
+        currentFrame.setVisible(false);
+        initialFrame.setVisible(true);
+        
+        currentFrame = initialFrame;
+    }
 }

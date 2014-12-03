@@ -45,8 +45,10 @@ public class CustomerRemoteThreadImpl implements CustomerRemote {
                         customerRemoteObj.sellItem(itemName, price, quantity);
                         callback.doCallback("sellItem");
                         RMIStoreClientHelper.customerRemoteObj.getLoader().setIndeterminate(false);
-                    } catch (Rejected | RemoteException ex) {
+                    } catch (Rejected ex) {
                         Logger.getLogger(CustomerRemoteThreadImpl.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (RemoteException ex) {
+                        RMIStoreClientHelper.forceLogout();
                     }
                     isCalling = false;
                 }
@@ -68,8 +70,10 @@ public class CustomerRemoteThreadImpl implements CustomerRemote {
                         customerRemoteObj.removeItem(itemId);
                         callback.doCallback("removeItem");
                         RMIStoreClientHelper.customerRemoteObj.getLoader().setIndeterminate(false);
-                    } catch (Rejected | RemoteException ex) {
+                    } catch (Rejected ex) {
                         Logger.getLogger(CustomerRemoteThreadImpl.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (RemoteException ex) {
+                        RMIStoreClientHelper.forceLogout();
                     }
                     isCalling = false;
                 }
@@ -91,8 +95,10 @@ public class CustomerRemoteThreadImpl implements CustomerRemote {
                         customerRemoteObj.buyItem(itemId);
                         callback.doCallback(null);
                         RMIStoreClientHelper.customerRemoteObj.getLoader().setIndeterminate(false);
-                    } catch (Rejected | RemoteException ex) {
+                    } catch (Rejected ex) {
                         Logger.getLogger(CustomerRemoteThreadImpl.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (RemoteException ex) {
+                        RMIStoreClientHelper.forceLogout();
                     }
                     isCalling = false;
                 }
@@ -114,8 +120,10 @@ public class CustomerRemoteThreadImpl implements CustomerRemote {
                         customerRemoteObj.wishItem(name, price);
                         callback.doCallback(null);
                         RMIStoreClientHelper.customerRemoteObj.getLoader().setIndeterminate(false);
-                    } catch (Rejected | RemoteException ex) {
+                    } catch (Rejected ex) {
                         Logger.getLogger(CustomerRemoteThreadImpl.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (RemoteException ex) {
+                        RMIStoreClientHelper.forceLogout();
                     }
                     isCalling = false;                        
                 }
@@ -137,8 +145,10 @@ public class CustomerRemoteThreadImpl implements CustomerRemote {
                         ArrayList<Item> returnItem = customerRemoteObj.getOtherItems();
                         callback.doCallback(returnItem);
                         RMIStoreClientHelper.customerRemoteObj.getLoader().setIndeterminate(false);
-                    } catch (Rejected | RemoteException ex) {
+                    } catch (Rejected ex) {
                         Logger.getLogger(CustomerRemoteThreadImpl.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (RemoteException ex) {
+                        RMIStoreClientHelper.forceLogout();
                     }
                     isCalling = false;
                 }
@@ -161,8 +171,10 @@ public class CustomerRemoteThreadImpl implements CustomerRemote {
                         ArrayList<Item> returnItem = customerRemoteObj.getUserItems();
                         callback.doCallback(returnItem);
                         RMIStoreClientHelper.customerRemoteObj.getLoader().setIndeterminate(false);
-                    } catch (Rejected | RemoteException ex) {
+                    } catch (Rejected ex) {
                         Logger.getLogger(CustomerRemoteThreadImpl.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (RemoteException ex) {
+                        RMIStoreClientHelper.forceLogout();
                     }
                     isCalling = false;
                 }
@@ -186,7 +198,7 @@ public class CustomerRemoteThreadImpl implements CustomerRemote {
                         callback.doCallback(returnValue);
                         RMIStoreClientHelper.customerRemoteObj.getLoader().setIndeterminate(false);
                     } catch (RemoteException ex) {
-                        Logger.getLogger(CustomerRemoteThreadImpl.class.getName()).log(Level.SEVERE, null, ex);
+                        RMIStoreClientHelper.forceLogout();
                     }
                     isCalling = false;
                 }
@@ -205,8 +217,10 @@ public class CustomerRemoteThreadImpl implements CustomerRemote {
                 try {
                     boolean returnValue = customerRemoteObj.unRegister();
                     callback.doCallback(returnValue);
-                } catch (Rejected | RemoteException ex) {
+                } catch (Rejected ex) {
                     Logger.getLogger(CustomerRemoteThreadImpl.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (RemoteException ex) {
+                    RMIStoreClientHelper.forceLogout();
                 }
             }
             

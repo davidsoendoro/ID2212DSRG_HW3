@@ -53,6 +53,8 @@ public class RMIStoreClientLogin extends javax.swing.JFrame {
             }
             
         }.start();
+        
+        RMIStoreClientHelper.initialFrame = this;
     }
 
     /**

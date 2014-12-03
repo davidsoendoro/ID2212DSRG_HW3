@@ -33,7 +33,6 @@ public class RMIStoreClientMain extends javax.swing.JFrame {
     public RMIStoreClientMain() {
         initComponents();
         initTabs();        
-        
     }
     
     public RMIStoreClientMain(javax.swing.JFrame caller, String username) {
@@ -197,7 +196,8 @@ public class RMIStoreClientMain extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new RMIStoreClientMain().setVisible(true);
+                RMIStoreClientMain main = new RMIStoreClientMain();
+                main.setVisible(true);
             }
         });
     }
@@ -238,6 +238,8 @@ public class RMIStoreClientMain extends javax.swing.JFrame {
         ClientRemoteImpl clientRemoteImpl = (ClientRemoteImpl) 
                 RMIStoreClientHelper.clientRemoteObj;
         clientRemoteImpl.setBalanceDisplayer(accountTab);
+        
+        RMIStoreClientHelper.currentFrame = this;
     }
 
 }
