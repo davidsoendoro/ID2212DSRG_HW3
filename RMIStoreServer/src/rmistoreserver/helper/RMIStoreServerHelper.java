@@ -20,6 +20,7 @@ public class RMIStoreServerHelper {
     public static final String TABLE_ITEM = "ITEM";
     public static final String TABLE_WISH = "WISH";
     public static final String TABLE_TRANSACTION = "TRANS";
+    public static final String TABLE_NOTIFICATION = "NOTIFICATION";
     
     //Customer table
     public static final String CREATE_CUSTOMER_TABLE = "CREATE TABLE " + rmistoreserver.helper.RMIStoreServerHelper.TABLE_CUSTOMER
@@ -66,4 +67,15 @@ public class RMIStoreServerHelper {
             + "item_name VARCHAR(128), item_price FLOAT, isBuy BOOLEAN)";
     public static final String INSERT_IN_TRANSACTION_TABLE="INSERT INTO "+rmistoreserver.helper.RMIStoreServerHelper.TABLE_TRANSACTION + " (customer_id, item_name, item_price, isBuy) VALUES (?, ?, ?,?)";
     public static final String RETRIEVE_TRANS="SELECT * FROM "+ rmistoreserver.helper.RMIStoreServerHelper.TABLE_TRANSACTION + " WHERE CUSTOMER_ID = ?";
+
+    // Notification table
+    public static final String CREATE_NOTIFICATION_TABLE = "CREATE TABLE " + rmistoreserver.helper.RMIStoreServerHelper.TABLE_NOTIFICATION
+            + " (id INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY "
+            + "(START WITH 1, INCREMENT BY 1), customer_id INTEGER NOT NULL, "
+            + "message VARCHAR(128))";
+    public static final String INSERT_IN_NOTIFICATION_TABLE="INSERT INTO "+rmistoreserver.helper.RMIStoreServerHelper.TABLE_NOTIFICATION + " (customer_id, message) VALUES (?, ?)";
+    public static final String RETRIEVE_NOTIFICATION="SELECT message FROM "+ rmistoreserver.helper.RMIStoreServerHelper.TABLE_NOTIFICATION + " WHERE CUSTOMER_ID = ?";
+
+
+
 }
