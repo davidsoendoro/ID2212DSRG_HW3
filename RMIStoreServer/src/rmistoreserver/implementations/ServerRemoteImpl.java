@@ -59,7 +59,7 @@ public class ServerRemoteImpl extends UnicastRemoteObject
     private PreparedStatement retrieveTransStatement;
     private PreparedStatement insertNotificationStatement;
     private PreparedStatement retrieveNotificationStatement;
-    
+    private PreparedStatement deleteNotificationStatement;
 
     private Map<String, Account> accounts = new HashMap<>();
 
@@ -91,7 +91,7 @@ public class ServerRemoteImpl extends UnicastRemoteObject
             statement.executeUpdate(rmistoreserver.helper.RMIStoreServerHelper.CREATE_ITEM_TABLE);
             statement.executeUpdate(rmistoreserver.helper.RMIStoreServerHelper.CREATE_TRANSACTION_TABLE);
             statement.executeUpdate(rmistoreserver.helper.RMIStoreServerHelper.CREATE_WISH_TABLE);
-            statement.executeUpdate(rmistoreserver.helper.RMIStoreServerHelper.CREATE_NOTIFICATION_TABLE);            
+            statement.executeUpdate(rmistoreserver.helper.RMIStoreServerHelper.CREATE_NOTIFICATION_TABLE);
         }
         return connection;
     }
@@ -139,10 +139,10 @@ public class ServerRemoteImpl extends UnicastRemoteObject
         retrieveWisherStatement = connection.prepareStatement(rmistoreserver.helper.RMIStoreServerHelper.RETRIEVE_WISH);
         insertTransStatement = connection.prepareStatement(rmistoreserver.helper.RMIStoreServerHelper.INSERT_IN_TRANSACTION_TABLE);
         retrieveTransStatement = connection.prepareStatement(rmistoreserver.helper.RMIStoreServerHelper.RETRIEVE_TRANS);
-        insertNotificationStatement=connection.prepareStatement(rmistoreserver.helper.RMIStoreServerHelper.INSERT_IN_NOTIFICATION_TABLE);
-        retrieveNotificationStatement=connection.prepareStatement(rmistoreserver.helper.RMIStoreServerHelper.RETRIEVE_NOTIFICATION);
-    
-    }   
+        insertNotificationStatement = connection.prepareStatement(rmistoreserver.helper.RMIStoreServerHelper.INSERT_IN_NOTIFICATION_TABLE);
+        retrieveNotificationStatement = connection.prepareStatement(rmistoreserver.helper.RMIStoreServerHelper.RETRIEVE_NOTIFICATION);
+        deleteNotificationStatement=connection.prepareStatement(rmistoreserver.helper.RMIStoreServerHelper.DELETE_NOTIFICATION);
+    }
 
     @Override
     public synchronized void register(String name, String pass)
@@ -192,13 +192,13 @@ public class ServerRemoteImpl extends UnicastRemoteObject
             //check username and password
             getCustomerPassStatement.setString(1, name);
             ResultSet rs = getCustomerPassStatement.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 if (!rs.getString("pass").equals(pass)) {
                     throw new Rejected("Password is incorrect.");
                 }
-            }
-            else
+            } else {
                 throw new Rejected("User does not exist.");
+            }
             int id = 0;
             getCustomerIdStatement.setString(1, name);
             ResultSet customerIdRes = getCustomerIdStatement.executeQuery();
@@ -208,14 +208,17 @@ public class ServerRemoteImpl extends UnicastRemoteObject
             customerHash.put(id, new CustomerWrap(name, clientRemote));
             rmistore.commons.interfaces.CustomerRemote client = new CustomerRemoteImpl(id, this);
             clientRemote.receiveMessage("Welcome!");
-            String message="";
+            String message = "";
             retrieveNotificationStatement.setInt(1, id);
-            ResultSet messageSet= retrieveNotificationStatement.executeQuery();
-            while(messageSet.next()){
-                message= message+ messageSet.getString("message")+"\n";
+            ResultSet messageSet = retrieveNotificationStatement.executeQuery();
+            while (messageSet.next()) {
+                message = message + messageSet.getString("message") + "\n";
             }
-            if(message == null)
-            clientRemote.receiveMessage(message);
+            if (!message.equals("")) {
+                clientRemote.receiveMessage(message);
+                deleteNotificationStatement.setInt(1, id);
+                deleteNotificationStatement.executeUpdate();
+            }
             return client;
         } catch (SQLException ex) {
             Logger.getLogger(ServerRemoteImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -278,7 +281,7 @@ public class ServerRemoteImpl extends UnicastRemoteObject
             checkItemStatement.setInt(1, itemId);
             ResultSet rs = checkItemStatement.executeQuery();
             while (rs.next()) {
-                itemPrice = rs.getInt("price");
+                itemPrice = rs.getFloat("price");
                 seller_id = rs.getInt("seller_id");
                 itemName = rs.getString("name");
             }
@@ -300,8 +303,8 @@ public class ServerRemoteImpl extends UnicastRemoteObject
                         try {
 
                             ServerRemoteImpl.this.getClientObj(seller).receiveMessage("Your item " + name_of_item + " sold. Money credited to your account.");
-                        } catch (NullPointerException| RemoteException ex) {
-                            System.out.println("exception: "+ex);
+                        } catch (NullPointerException | RemoteException ex) {
+                            System.out.println("exception: " + ex);
                             try {
                                 Logger.getLogger(ServerRemoteImpl.class.getName()).log(Level.SEVERE, null, ex);
                                 insertNotificationStatement.setInt(1, seller);
@@ -322,7 +325,7 @@ public class ServerRemoteImpl extends UnicastRemoteObject
                     insertTransStatement.setBoolean(4, false);
                     insertTransStatement.executeUpdate();
                     getCustomerNameStatement.setInt(1, seller);
-                    ResultSet sellerNameSet=getCustomerNameStatement.executeQuery();
+                    ResultSet sellerNameSet = getCustomerNameStatement.executeQuery();
                     sellerNameSet.next();
                     bankRMIObj.getAccount(sellerNameSet.getString("name")).deposit(itemPrice);
                 } catch (Rejected r) {
@@ -343,7 +346,7 @@ public class ServerRemoteImpl extends UnicastRemoteObject
                 this.getClientObj(customerId).receiveMessage("Insufficient balance");
                 return false;
             }
-        } catch (NullPointerException| SQLException | RemoteException ex) {
+        } catch (NullPointerException | SQLException | RemoteException ex) {
             System.out.println("Remote Exception: " + ex);
 
             return false;
@@ -453,12 +456,12 @@ public class ServerRemoteImpl extends UnicastRemoteObject
             } catch (RemoteException r) {
                 try {
                     insertNotificationStatement.setInt(1, wisherId);
-                    insertNotificationStatement.setString(2,"Item " + itemName + " available for price " + itemPrice );
+                    insertNotificationStatement.setString(2, "Item " + itemName + " available for price " + itemPrice);
                     insertNotificationStatement.executeUpdate();
                 } catch (SQLException ex) {
                     Logger.getLogger(ServerRemoteImpl.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                
+
             }
         }
 
@@ -490,12 +493,12 @@ public class ServerRemoteImpl extends UnicastRemoteObject
         return md5;
     }
 
-    ArrayList <Transaction> retrieveUserTransaction(int customerId){
+    ArrayList<Transaction> retrieveUserTransaction(int customerId) {
         try {
-            ArrayList<Transaction> trans=new ArrayList<>();
+            ArrayList<Transaction> trans = new ArrayList<>();
             retrieveTransStatement.setInt(1, customerId);
-            ResultSet rs= retrieveTransStatement.executeQuery();
-            while(rs.next()){
+            ResultSet rs = retrieveTransStatement.executeQuery();
+            while (rs.next()) {
                 trans.add(new Transaction(rs.getString("item_name"), rs.getFloat("item_price"), rs.getBoolean("isBuy")));
             }
             return trans;
@@ -503,5 +506,5 @@ public class ServerRemoteImpl extends UnicastRemoteObject
             Logger.getLogger(ServerRemoteImpl.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
-    } 
+    }
 }

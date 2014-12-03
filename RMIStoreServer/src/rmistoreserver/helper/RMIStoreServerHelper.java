@@ -74,8 +74,8 @@ public class RMIStoreServerHelper {
             + "(START WITH 1, INCREMENT BY 1), customer_id INTEGER NOT NULL, "
             + "message VARCHAR(128))";
     public static final String INSERT_IN_NOTIFICATION_TABLE="INSERT INTO "+rmistoreserver.helper.RMIStoreServerHelper.TABLE_NOTIFICATION + " (customer_id, message) VALUES (?, ?)";
-    public static final String RETRIEVE_NOTIFICATION="SELECT message FROM "+ rmistoreserver.helper.RMIStoreServerHelper.TABLE_NOTIFICATION + " WHERE CUSTOMER_ID = ?";
-
+    public static final String RETRIEVE_NOTIFICATION="SELECT message FROM "+ rmistoreserver.helper.RMIStoreServerHelper.TABLE_NOTIFICATION + " WHERE customer_id = ?";
+    public static final String DELETE_NOTIFICATION="DELETE FROM "+ rmistoreserver.helper.RMIStoreServerHelper.TABLE_NOTIFICATION + " WHERE customer_id = ?";
 
 
 }
