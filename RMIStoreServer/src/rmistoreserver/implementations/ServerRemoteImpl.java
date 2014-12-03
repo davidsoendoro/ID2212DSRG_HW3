@@ -243,16 +243,14 @@ public class ServerRemoteImpl extends UnicastRemoteObject
 
             }
             //notify wishList customers
-            retrieveWisherStatement.setString(1, itemName);
+            retrieveWisherStatement.setString(1, "%"+itemName+"%");
             ResultSet rs = retrieveWisherStatement.executeQuery();
             while (rs.next()) {
-                if (itemName.contains(rs.getString("name"))) {
-                    if (rs.getFloat("price") <= price) {
+                    if (rs.getFloat("price") >= price) {
                         Thread notificationThread = new NotificationThread(rs.getInt("wisher_id"),
-                                rs.getString("name"), rs.getFloat("price"));
+                                rs.getString("name"), price);
                         notificationThread.start();
                     }
-                }
             }
             return true;
         } catch (SQLException ex) {

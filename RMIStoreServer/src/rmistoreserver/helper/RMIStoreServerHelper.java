@@ -57,7 +57,7 @@ public class RMIStoreServerHelper {
             + "(START WITH 1, INCREMENT BY 1), name VARCHAR(128), "
             + "price FLOAT NOT NULL, wisher_id INTEGER NOT NULL, FOREIGN KEY (wisher_id) REFERENCES CUSTOMER(id))";
     public static final String INSERT_IN_WISH_TABLE="INSERT INTO "+rmistoreserver.helper.RMIStoreServerHelper.TABLE_WISH + " (name, price,wisher_id) VALUES (?, ?, ?)";
-    public static final String RETRIEVE_WISH="SELECT * FROM "+rmistoreserver.helper.RMIStoreServerHelper.TABLE_WISH + " WHERE name = ?";
+    public static final String RETRIEVE_WISH="SELECT * FROM "+rmistoreserver.helper.RMIStoreServerHelper.TABLE_WISH + " WHERE name LIKE ?";
     
     
     //transaction table
