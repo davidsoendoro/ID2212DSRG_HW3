@@ -229,7 +229,7 @@ public class RMIStoreClientLogin extends javax.swing.JFrame {
                         rmiStoreClientMain.setVisible(true);
                         RMIStoreClientLogin.this.setVisible(false);
                     } catch (NotBoundException | MalformedURLException | RemoteException | Rejected ex1) {
-                        Logger.getLogger(RMIStoreClientLogin.class.getName()).log(Level.SEVERE, null, ex1);
+                        JOptionPane.showMessageDialog(RMIStoreClientHelper.currentFrame, ex.getMessage());
                     }
 
                 }

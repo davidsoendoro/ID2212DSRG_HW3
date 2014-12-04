@@ -22,14 +22,10 @@
         <group/>
         <group name="ID2212DSRG_HW2"/>
         <group name="ID2212DSRG_HW3">
-            <file>file:/C:/Users/CynthiaJuwita/Documents/GitHub/ID2212DSRG_HW3/RMIStoreClient/src/rmistoreclient/ui/tabs/items/RMIStoreClientBuyItem.java</file>
-            <file>file:/C:/Users/CynthiaJuwita/Documents/GitHub/ID2212DSRG_HW3/RMIStoreClient/src/rmistoreclient/ui/RMIStoreClientRegister.java</file>
-            <file>file:/C:/Users/CynthiaJuwita/Documents/GitHub/ID2212DSRG_HW3/RMIStoreClient/src/rmistoreclient/ui/tabs/RMIStoreClientAccountPanel.java</file>
-            <file>file:/C:/Users/CynthiaJuwita/Documents/GitHub/ID2212DSRG_HW3/RMIStoreClient/src/rmistoreclient/helper/RMIStoreClientHelper.java</file>
-            <file>file:/C:/Users/CynthiaJuwita/Documents/GitHub/ID2212DSRG_HW3/RMIStoreClient/src/rmistoreclient/ui/tabs/RMIStoreClientHistoryPanel.java</file>
-            <file>file:/C:/Users/CynthiaJuwita/Documents/GitHub/ID2212DSRG_HW3/RMIStoreClient/src/rmistore/commons/interfaces/CustomerRemote.java</file>
-            <file>file:/C:/Users/CynthiaJuwita/Documents/GitHub/ID2212DSRG_HW3/RMIStoreClient/src/rmistoreclient/ui/RMIStoreClientLogin.java</file>
-            <file>file:/C:/Users/CynthiaJuwita/Documents/GitHub/ID2212DSRG_HW3/RMIStoreClient/src/rmistoreclient/ui/tabs/RMIStoreClientBuyPanel.java</file>
+            <file>file:/Users/davidsoendoro/ID2212DSRG_HW3/RMIStoreClient/src/rmistore/commons/interfaces/CustomerRemote.java</file>
+            <file>file:/Users/davidsoendoro/ID2212DSRG_HW3/RMIStoreClient/src/rmistoreclient/implementations/CustomerRemoteThreadImpl.java</file>
+            <file>file:/Users/davidsoendoro/ID2212DSRG_HW3/RMIStoreClient/src/rmistoreclient/ui/tabs/RMIStoreClientSellPanel.java</file>
+            <file>file:/Users/davidsoendoro/ID2212DSRG_HW3/RMIStoreClient/src/rmistoreclient/ui/RMIStoreClientLogin.java</file>
         </group>
     </open-files>
 </project-private>
